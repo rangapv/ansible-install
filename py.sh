@@ -1,0 +1,327 @@
+#!/usr/bin/bash
+set -E
+li=$(uname -s)
+
+pyupgrade() {
+pargs="$#"
+args=("$@")
+arg1=${args[$((pargs-1))]}
+pyver=${args[$((pargs-pargs))]}
+pyver2=${args[$((pargs-$((pargs-1))))]}
+pyver3=${args[$((pargs-$((pargs-2))))]}
+var3="/"
+wg=$pyver$pyver2$var3$pyver3
+sudo wget "$wg" 
+tar xzf $pyver3
+se1=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]"."a[3]}')
+se2=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]}')
+se3=$( echo "${pyver2}" | awk '{split($0,a,".");print a[1]"."a[2]}')
+cd $se1 
+sudo ./configure --enable-optimizations
+sudo make altinstall
+slpy="python$se3"
+sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python
+}
+
+sslupdate() {
+cm1="$@"
+sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+curl https://www.openssl.org/source/openssl-1.0.2o.tar.gz | tar xz
+cd openssl-1.0.2o
+sudo ./config shared --prefix=/usr/local
+sudo make
+sudo make install
+}
+
+pipupgrade () {
+      pipargs="$#"
+      pargs=("$@")
+      pargs1=${pargs[$((pipargs-pipargs))]}
+      piver=$(python -V 2>&1)
+      piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
+      piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
+      piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+
+      if [ $piver12 = "2" ]
+      then
+	 sudo $pargs1 install -y python-pip
+         sudo pip install --upgrade pip
+	 piprelease
+      elif [ $piver12 = "3" ]
+      then
+         sudo $pargs1 install -y python3-pip
+	 sudo pip3 install --upgrade pip
+	 piprelease 3
+      else
+	 echo "This should not happen"
+      fi
+}
+
+
+
+susepyup(){
+sudo zypper -y install git
+
+} 
+
+zlibadd() {
+	sudo wget http://www.zlib.net/zlib-1.2.11.tar.gz 
+        tar -xzf ./zlib-1.2.11.tar.gz
+        cd zlib-1.2.11
+        sudo make distclean
+        sudo ./configure
+        sudo make
+        sudo make install
+}
+
+lbrelease() {
+file1="/usr/bin/lsb_release"
+piver=$(python -V 2>&1)
+piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
+piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
+piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
+
+line1="#!/usr/local/bin/python${pyvert}"
+sudo sed -i "1s|^.*|${line1}|" $file1 
+
+sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/site-packages/lsb_release.py
+}
+
+
+
+lsbrelease() {
+link=$(readlink -f `which /usr/bin/python`)
+sudo ln -sf /usr/bin/python2 /usr/bin/python
+if [[ ! -z $c1 ]]
+then
+sudo yum -y install redhat-lsb-core-4.1-27.el7.centos.1.x86_64
+fi
+if [[ ! -z $r1 ]]
+then
+sudo yum -y install redhat-lsb-core-4.1-27.el7.x86_64 
+fi
+if [[ ! -z $a1 ]]
+then
+sudo yum -y install system-lsb-core-4.1-27.amzn2.1.x86_64
+fi
+line10="#!/usr/bin/python2"
+file11="/usr/libexec/urlgrabber-ext-down"
+sudo sed -i "1s|^.*|${line10}|" $file11 
+
+}
+
+yummy() {
+filey="/usr/bin/yum"
+yum1="#!/usr/bin/python2"
+sudo sed -i "1s|^.*|${yum1}|" $filey
+filez="/bin/yum"
+sudo sed -i "1s|^.*|${yum1}|" $filez
+}
+
+
+piprelease() {
+pargs="$#"
+args=("$@")
+#args2=${args[$((pargs-1))]}
+args1=${args[$((pargs-pargs))]}
+newpip="pip${args1}"
+file2=$( echo `which ${newpip}`)
+piver=$(python -V 2>&1)
+piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
+piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
+piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
+piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+if [[ $pargs -eq 0 ]]
+then
+piver112="2"
+line1="#!/usr/local/bin/python3.6"
+else
+line1="#!/usr/local/bin/python${piver112}"
+fi
+file1="/usr/local/bin/pip${args1}"
+sudo sed -i "1s|^.*|${line1}|g" $file1
+line21="from pip._internal.cli.main import main"
+line22="from pip._internal import main"
+sudo sed -i "s|${line22}|${line21}|g" $file1
+
+line3="#!/usr/local/bin/python3.6"
+file3="/usr/local/bin/pip"
+sudo sed -i "1s|^.*|${line3}|" $file3
+c1=$(cat /etc/*-release | grep ID= | grep centos)
+if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
+then
+line41="from pip._internal.cli.main import main"
+line31="from pip._internal import main"
+else
+line31="from pip._internal.cli.main import main"
+line41="from pip._internal import main"
+fi
+sudo sed -i "s|${line31}|${line41}|g" $file3
+
+if [[ $piver112 = "3.6" && -z $c1 && -z $r1 ]]
+then
+sudo sed -i "1s|^.*|${line1}|" $file2 
+line3="from pip._internal.cli.main import main"
+line4="from pip._internal import main"
+sudo sed -i "s|${line3}|${line4}|g" $file2
+elif [[ $piver112 = "3.6" &&  ( ! -z $c1 || ! -z $r1 ) ]]
+then
+sudo sed -i "1s|^.*|${line1}|" $file2 
+line4="from pip._internal.cli.main import main"
+line3="from pip._internal import main"
+sudo sed -i "s|${line3}|${line4}|g" $file2
+fi
+}
+
+if [ $(echo "$li" | grep Linux) ]
+then
+  mac=""
+else
+  mac=$(sw_vers | grep Mac)
+fi
+
+
+if [ -z "$mac" ]
+then
+  u1=$(cat /etc/*-release | grep ID= | grep ubuntu)
+  f1=$(cat /etc/*-release | grep ID= | grep fedora)
+  r1=$(cat /etc/*-release | grep ID= | grep rhel)
+  a1=$(cat /etc/*-release | grep ID= | grep amzn)
+  c1=$(cat /etc/*-release | grep ID= | grep centos)
+  s1=$(cat /etc/*-release | grep ID= | grep sles)
+  d1=$(cat /etc/*-release | grep ID= | grep debian)
+  fc1=$(cat /etc/*-release | grep ID= | grep flatcar)
+else 
+  echo "Mac is not empty"
+fi
+
+count=0
+
+if [ ! -z "$u1" ]
+then 
+	mi=$(lsb_release -cs)
+	lsb=$(echo "$?")
+	if [[ ( $lsb > 0 ) ]]
+        then
+		lbrelease
+	fi
+	mi2="${mi,,}"
+	ji=$(cat /etc/*-release | grep DISTRIB_ID | awk '{split($0,a,"=");print a[2]}')
+	ki="${ji,,}"
+
+	if [ "$ki" = "ubuntu" ]
+	then
+   	echo "IT IS UBUNTU"
+   	cm1="apt-get"
+        cm11="add-apt-repository"
+   	cm2="apt-key"
+        sudo $cm11 -y ppa:deadsnakes/ppa
+        sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
+        sudo $cm1 -y install gcc make wget
+	sudo $cm1 -y update
+	zlibadd
+	sslupdate $cm1 
+	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+	count=1
+	fi
+elif [ ! -z "$d1" ]
+then
+	mi=$(lsb_release -cs)
+	lsb=$(echo "$?")
+	if [[ ( $lsb > 0 ) ]]
+        then
+		lbrelease
+	fi
+	mi2="${mi,,}"
+	ji=$(cat /etc/*-release | grep ^ID= | grep -v "\"" | awk '{split($0,a,"=");print a[2]}')
+	ki="${ji,,}"
+	if [ "$ki" = "debian" ]
+	then
+	echo "IT IS Debian"
+	cm1="apt-get"
+	cm2="apt-key"
+	sudo $cm1 -y update
+	sudo $cm1 -y upgrade
+	sudo $cm1 -y install gcc make wget libffi-dev 
+        zlibadd
+	sslupdate $cm1 
+        count=1
+        fi
+
+elif [ ! -z "$f1" ]
+then
+	ji=$(cat /etc/*-release | grep '^ID=' |awk '{split($0,a,"\"");print a[2]}')
+        ki="${ji,,}"
+        if [ $ki = "fedora" ]
+        then
+        echo " it is fedora"
+        cm1="dnf"
+        sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
+	count=1
+        fi
+elif [ ! -z "$s1" ]
+then
+	ji=$(cat /etc/*-release | grep '^ID=' |awk '{split($0,a,"\"");print a[2]}')
+        ki="${ji,,}"
+        if [ $ki = "sles" ]
+        then
+        echo " it is SUSE"
+        sudo zypper install -y gcc make openssl-devel libffi-devel zlib-devel wget lsb-release
+	count=1
+        fi
+elif [ ! -z "$fc1" ]
+then
+	ji=$(cat /etc/*-release | grep '^ID=' |awk '{split($0,a,"\"");print a[2]}')
+        ki="${ji,,}"
+        if [ $ki = "flatcar" ]
+        then
+          echo "It is Flat Car Linux"
+        fi
+	count=0
+
+elif [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
+then
+	mi=$(lsb_release -cs)
+	lsb=$(echo "$?")
+	if [[ ( $lsb > 0 ) ]]
+        then
+		lsbrelease
+	fi
+        ji=$(cat /etc/*-release | grep '^ID=' |awk '{split($0,a,"\"");print a[2]}')
+        ki="${ji,,}"
+	if [ $ki = "amzn" ]
+	then
+	   echo "It is amazon AMI"
+	   count=1
+	elif [ $ki = "rhel" ]
+	then 
+	   echo "It is RHEL"
+	   count=1
+	elif [ $ki = "centos" ]
+	then
+	   echo "It is centos"
+           count=1
+	else
+	   echo "OS flavor cant be determined"
+	fi
+        yummy
+        cm1="yum"
+        link=$(readlink -f `which /usr/bin/python`)
+	sudo ln -sf /usr/bin/python2 /usr/bin/python
+	sudo $cm1 -y update
+        sudo $cm1 -y install wget
+	sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
+        sudo $cm1 -y install @development
+        sudo ln -sf $link /usr/bin/python 
+elif [ ! -z "$mac" ]
+then
+	echo "It is a Mac"
+	cm1="brew"
+	count=1
+else
+	echo "The distribution cannot be determined"
+fi
+pi=$(python --version)
+ret=$( echo "$?")
+echo `${newpip} -V`
