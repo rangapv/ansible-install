@@ -1,6 +1,7 @@
 #!/usr/bin/bash
+
 set -E
-li=$(uname -s)
+source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
 
 pyupgrade() {
 pargs="$#"
@@ -57,7 +58,24 @@ pipupgrade () {
       fi
 }
 
+ansible () {
 
+sudo ln -sf ./python3 ./python
+sudo apt-get install -y python3-pip
+sudo apt-get install build-essential libssl-dev libffi-dev python-dev -y
+sudo apt-get install selinux-utils
+sudo apt-get install -y policycoreutils
+sudo apt-get install selinux-basics
+sudo setenforce 0
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo apt-get update
+sudo -H pip install ansible
+ansible --version
+ansible -m ping localhost
+
+
+}
 
 susepyup(){
 sudo zypper -y install git
@@ -184,17 +202,6 @@ fi
 
 if [ -z "$mac" ]
 then
-  u1=$(cat /etc/*-release | grep ID= | grep ubuntu)
-  f1=$(cat /etc/*-release | grep ID= | grep fedora)
-  r1=$(cat /etc/*-release | grep ID= | grep rhel)
-  a1=$(cat /etc/*-release | grep ID= | grep amzn)
-  c1=$(cat /etc/*-release | grep ID= | grep centos)
-  s1=$(cat /etc/*-release | grep ID= | grep sles)
-  d1=$(cat /etc/*-release | grep ID= | grep debian)
-  fc1=$(cat /etc/*-release | grep ID= | grep flatcar)
-else 
-  echo "Mac is not empty"
-fi
 
 count=0
 
@@ -224,6 +231,7 @@ then
 	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
 	count=1
+        ansible
 	fi
 elif [ ! -z "$d1" ]
 then
@@ -325,3 +333,6 @@ fi
 pi=$(python --version)
 ret=$( echo "$?")
 echo `${newpip} -V`
+else 
+  echo "Mac is not empty"
+fi
