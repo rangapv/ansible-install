@@ -22,6 +22,7 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python$se3"
 sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python
+sudo ln -sf /usr/bin/python /usr/bin/python3
 }
 
 sslupdate() {
@@ -109,6 +110,9 @@ sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/sit
 
 
 lsbrelease() {
+
+if [[ ( ! -z $c1 ) || ( ! -z $r1 ) || ( ! -z $a1 ) ]]
+then	
 link=$(readlink -f `which /usr/bin/python`)
 sudo ln -sf /usr/bin/python2 /usr/bin/python
 if [[ ! -z $c1 ]]
@@ -126,6 +130,11 @@ fi
 line10="#!/usr/bin/python2"
 file11="/usr/libexec/urlgrabber-ext-down"
 sudo sed -i "1s|^.*|${line10}|" $file11 
+fi
+if [[ ( ! -z $u1 ) ]]
+then
+sudo apt-get -y install lsb-core 
+fi
 
 }
 
@@ -137,6 +146,89 @@ filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
 }
 
+pip21() {
+pipupgrade $cm1
+             declare -i pipver1
+              
+             piver=$(python -V 2>&1)
+             piver11=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
+             piver12=$( echo "${piver11}" | awk '{split($0,a,".");print a[1]}')
+             piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+             pipadd="pip3.${piver33}"
+	     pipv=$( echo "$pipadd --version")
+             pipret=$( echo "$?" )
+	     pipver1=100
+	     if [[ $pipret < 1 ]]
+             then
+	     pipver=$( echo "$pipv" | awk '{split($0,a," ");print a[2]}')
+             pipver1=$( echo "$pipver" | awk '{split($0,a,".");print a[1]}')
+             fi 
+          #    echo "eval $(declare -p pipver1)"
+          #    echo "the value of pipver is $pipver1"
+  
+	     if (( $pipver1 < 21 || $pipret != 0 )) 
+             then
+                eval "sudo $cm1 install -y wget"
+                eval "wget https://bootstrap.pypa.io/get-pip.py -O ./get-pip.py"
+                eval "sudo python3 ./get-pip.py"
+             else
+              echo "pipver is >21"
+             fi
+pipver=$( echo "pip -V")
+	      pipech=$( echo "$?" )
+	      if [ $pipech > 0 ]
+	      then
+		   piprelease
+	      fi
+	      piprelease 3
+	      nw="pip3"
+	      ne="."
+              newpip="${nw}${ne}${piver33}"
+	      piprelease "${piver12}${ne}${piver33}"
+ 	      echo `${newpip} -V`
+}
+
+
+
+
+pipup() {
+	      piver=$(python -V 2>&1)
+              piverec=$(echo "$?")
+	      piver34=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+	      piverwh=$(which python)
+	      piverwhec=$(echo "$?")
+              piver11=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
+              piver12=$( echo "${piver11}" | awk '{split($0,a,".");print a[1]}')
+              piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+	      if [[ ( ! -z "$u1" || ! -z "$d1" ) && ( $piver34 = "6" ) && ( $piverwhec < 1) && ($piverec < 1) ]]
+              then
+              eval "sudo ln -sf /usr/local/bin/python3.6 /usr/bin/python3"
+              eval "sudo ln -sf /usr/bin/python3 /usr/bin/python"
+	      fi
+	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
+	      then
+              link=$(readlink -f `which /usr/bin/python`)
+	      sudo ln -sf /usr/bin/python2 /usr/bin/python	     
+              eval "sudo $cm1 install -y python3-pip"
+              eval "pip install --upgrade pip"
+              eval "pip install awscli"
+              eval "pip install boto"
+              eval "pip install boto3"
+              eval "sudo $cm1 install -y python-boto"
+              eval "sudo $cm1 install -y python-boto3"
+              sudo ln -sf $link /usr/bin/python
+	      else     
+	      eval "sudo $cm1 install -y python3-pip"
+	      eval "pip3.${piver33} install --upgrade pip"
+              eval "pip3.${piver33} install awscli"
+              eval "pip3.${piver33} install boto"
+              eval "pip3.${piver33} install boto3"
+              eval "sudo $cm1 install -y python-boto"
+              eval "sudo $cm1 install -y python-boto3"
+	      fi
+              echo "Success"
+
+}
 
 piprelease() {
 pargs="$#"
@@ -227,11 +319,13 @@ then
         sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
-	zlibadd
-	sslupdate $cm1 
+#	zlibadd
+#	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
 	count=1
-        ansible
+	pipup
+	pip21
+#        ansible
 	fi
 elif [ ! -z "$d1" ]
 then
@@ -332,7 +426,7 @@ else
 fi
 pi=$(python --version)
 ret=$( echo "$?")
-echo `${newpip} -V`
+#echo `${newpip} -V`
 else 
   echo "Mac is not empty"
 fi
