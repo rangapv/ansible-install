@@ -62,15 +62,15 @@ pipupgrade () {
 ansible () {
 
 sudo ln -sf ./python3 ./python
-sudo apt-get install -y python3-pip
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev -y
-sudo apt-get install selinux-utils
-sudo apt-get install -y policycoreutils
-sudo apt-get install selinux-basics
+sudo $cm1 install -y python3-pip
+sudo $cm1 install build-essential libssl-dev libffi-dev python-dev -y
+sudo $cm1 install selinux-utils
+sudo $cm1 install -y policycoreutils
+sudo $cm1 install selinux-basics
 sudo setenforce 0
-sudo apt-get update
-sudo apt-get install software-properties-common
-sudo apt-get update
+sudo $cm1 update
+sudo $cm1 install software-properties-common
+sudo $cm1 update
 sudo -H pip install ansible
 ansible --version
 ansible -m ping localhost
@@ -113,8 +113,13 @@ lsbrelease() {
 
 if [[ ( ! -z $c1 ) || ( ! -z $r1 ) || ( ! -z $a1 ) ]]
 then	
+ryum=`which python`
+ryums="$?"
+if [[ ( $ryums -eq 0 ) ]]
+then
 link=$(readlink -f `which /usr/bin/python`)
 sudo ln -sf /usr/bin/python2 /usr/bin/python
+fi
 if [[ ! -z $c1 ]]
 then
 sudo yum -y install redhat-lsb-core-4.1-27.el7.centos.1.x86_64
@@ -139,11 +144,16 @@ fi
 }
 
 yummy() {
+ryum=`which python`
+ryums="$?"
+if [[ ( $ryums -eq 0 ) ]]
+then
 filey="/usr/bin/yum"
 yum1="#!/usr/bin/python2"
 sudo sed -i "1s|^.*|${yum1}|" $filey
 filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
+fi
 }
 
 pip21() {
@@ -409,13 +419,29 @@ then
 	fi
         yummy
         cm1="yum"
+        ryum=`which python`
+        ryums="$?"
+        if [[ ( $ryums -eq 0 ) ]]
+        then
+
         link=$(readlink -f `which /usr/bin/python`)
 	sudo ln -sf /usr/bin/python2 /usr/bin/python
+        fi
 	sudo $cm1 -y update
         sudo $cm1 -y install wget
 	sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
         sudo $cm1 -y install @development
+        pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+        count=1
+        pipup
+        pip21
+        ansible
+        ryum=`which python`
+        ryums="$?"
+        if [[ ( $ryums -eq 0 ) ]]
+        then
         sudo ln -sf $link /usr/bin/python 
+        fi
 elif [ ! -z "$mac" ]
 then
 	echo "It is a Mac"
