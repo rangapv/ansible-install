@@ -126,7 +126,21 @@ sudo yum -y install redhat-lsb-core-4.1-27.el7.centos.1.x86_64
 fi
 if [[ ! -z $r1 ]]
 then
+
+rr=`cat /etc/*-release | grep VERSION_ID= | awk '{split($0,a,"="); print a[2]}' | awk '{split($0,a,"."); print a[1]}' | grep 8`
+rrs="$?"
+if [[ ( $rrs -eq 0 ) ]]
+then
+#sudo yum whatprovides redhat-lsb-core
+sudo yum -y install redhat-lsb-core-4.1-47.el8.i686
+fi
+rr=`cat /etc/*-release | grep VERSION_ID= | awk '{split($0,a,"="); print a[2]}' | awk '{split($0,a,"."); print a[1]}' | grep 7`
+rrs="$?"
+if [[ ( $rrs -eq 0 ) ]]
+then
+#sudo yum whatprovides redhat-lsb-core
 sudo yum -y install redhat-lsb-core-4.1-27.el7.x86_64 
+fi
 fi
 if [[ ! -z $a1 ]]
 then
