@@ -2,7 +2,7 @@
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
-
+declare -s pyuni
 pyupgrade() {
 pargs="$#"
 args=("$@")
@@ -22,12 +22,10 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python$se3"
 ver3=`which ${slpy}`
+pyuni="${slpy}"
 ver3s="$?"
-if [[ ( $ver3s -eq 0 ) ]]
-then
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
-fi
 }
 
 sslupdate() {
@@ -271,7 +269,7 @@ zepips="$?"
       line1="#!${zepip}"
     else
       file1="/usr/local/bin/pip"
-      line1="#!/usr/local/bin/python3"
+      line1="#!/usr/local/bin/${pyuni}"
     fi
 else
 piver=$(python3 -V 2>&1)
