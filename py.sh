@@ -21,8 +21,13 @@ cd $se1
 sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python$se3"
-sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python
-#sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python3
+ver3=`which ${slpy}`
+ver3s="$?"
+if [[ ( $ver3s -eq 0 ) ]]
+then
+sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
+sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
+fi
 }
 
 sslupdate() {
