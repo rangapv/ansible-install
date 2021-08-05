@@ -22,7 +22,7 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python$se3"
 sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python
-sudo ln -sf /usr/bin/python /usr/bin/python3
+sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python3
 }
 
 sslupdate() {
@@ -226,7 +226,6 @@ pipup() {
 	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
 	      then
               link=$(readlink -f `which /usr/bin/python`)
-	      sudo ln -sf /usr/bin/python3 /usr/bin/python	     
               eval "sudo $cm1 install -y python3-pip"
               eval "pip install --upgrade pip"
               eval "pip install awscli"
@@ -234,7 +233,6 @@ pipup() {
               eval "pip install boto3"
               eval "sudo $cm1 install -y python-boto"
               eval "sudo $cm1 install -y python-boto3"
-              sudo ln -sf $link /usr/bin/python
 	      else     
 	      eval "sudo $cm1 install -y python3-pip"
 	      eval "pip3.${piver33} install --upgrade pip"
