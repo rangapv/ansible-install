@@ -2,7 +2,7 @@
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
-declare -s pyuni
+declare -i pyuni
 pyupgrade() {
 pargs="$#"
 args=("$@")
@@ -25,7 +25,6 @@ ver3=`which ${slpy}`
 pyuni="${slpy}"
 ver3s="$?"
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
-sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
 }
 
 sslupdate() {
@@ -292,27 +291,28 @@ file3="/usr/local/bin/pip"
 c1=$(cat /etc/*-release | grep ID= | grep centos)
 if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
 then
-line41="from pip._internal.cli.main import main"
-line31="from pip._internal import main"
+ line41="from pip._internal.cli.main import main"
+ line31="from pip._internal import main"
 else
-line31="from pip._internal.cli.main import main"
-line41="from pip._internal import main"
+ line31="from pip._internal.cli.main import main"
+ line41="from pip._internal import main"
 fi
 sudo sed -i "s|${line31}|${line41}|g" $file3
 
 if [[ $piver112 = "3.6" && -z $c1 && -z $r1 ]]
 then
-sudo sed -i "1s|^.*|${line1}|" $file2 
-line3="from pip._internal.cli.main import main"
-line4="from pip._internal import main"
-sudo sed -i "s|${line3}|${line4}|g" $file2
+ sudo sed -i "1s|^.*|${line1}|" $file2 
+ line3="from pip._internal.cli.main import main"
+ line4="from pip._internal import main"
+ sudo sed -i "s|${line3}|${line4}|g" $file2
 elif [[ $piver112 = "3.6" &&  ( ! -z $c1 || ! -z $r1 ) ]]
 then
-sudo sed -i "1s|^.*|${line1}|" $file2 
-line4="from pip._internal.cli.main import main"
-line3="from pip._internal import main"
-sudo sed -i "s|${line3}|${line4}|g" $file2
+ sudo sed -i "1s|^.*|${line1}|" $file2 
+ line4="from pip._internal.cli.main import main"
+ line3="from pip._internal import main"
+ sudo sed -i "s|${line3}|${line4}|g" $file2
 fi
+
 }
 
 if [ $(echo "$li" | grep Linux) ]
@@ -443,12 +443,6 @@ then
         ryum=`which python`
         ryums="$?"
         ryumchk=0
-        if [[ ( $ryums -eq 0 ) ]]
-        then
-        ryumchk=1
-        link=$(readlink -f `which /usr/bin/python`)
-	sudo ln -sf /usr/bin/python2 /usr/bin/python
-        fi
 	sudo $cm1 -y update
         sudo $cm1 -y install wget
 	sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
@@ -458,10 +452,6 @@ then
 	pip21 3
         pipup
 #        ansible
-        if [[ ( $ryumchk -eq 1 ) ]]
-        then
-        sudo ln -sf $link /usr/bin/python 
-        fi
 elif [ ! -z "$mac" ]
 then
 	echo "It is a Mac"
