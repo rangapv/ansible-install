@@ -226,7 +226,7 @@ pipup() {
 	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
 	      then
               link=$(readlink -f `which /usr/bin/python`)
-	     # sudo ln -sf /usr/bin/python2 /usr/bin/python	     
+	      sudo ln -sf /usr/bin/python3 /usr/bin/python	     
               eval "sudo $cm1 install -y python3-pip"
               eval "pip install --upgrade pip"
               eval "pip install awscli"
@@ -274,8 +274,8 @@ sudo sed -i "1s|^.*|${line1}|g" $file1
 line21="from pip._internal.cli.main import main"
 line22="from pip._internal import main"
 sudo sed -i "s|${line22}|${line21}|g" $file1
-
-line3="#!/usr/local/bin/python3.6"
+nel=`which python`
+line3="#!${nel}"
 file3="/usr/local/bin/pip"
 sudo sed -i "1s|^.*|${line3}|" $file3
 c1=$(cat /etc/*-release | grep ID= | grep centos)
