@@ -22,7 +22,7 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python$se3"
 sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python
-sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python3
+#sudo ln -sf "/usr/local/bin/$slpy" /usr/bin/python3
 }
 
 sslupdate() {
@@ -253,7 +253,14 @@ args=("$@")
 args1=${args[$((pargs-pargs))]}
 newpip="pip${args1}"
 file2=$( echo `which ${newpip}`)
+
+if [[ $pargs -eq 0 ]]
+then
 piver=$(python -V 2>&1)
+else
+piver=$(python3 -V 2>&1)
+fi
+
 piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
@@ -262,7 +269,13 @@ if [[ $pargs -eq 0 ]]
 then
 piver112="2"
 lpy=`which python${piver112}`
-line1="#!${lpy}"
+lpys="$?"
+  if [[ ( $lpys -eq 0 ) ]]
+  then
+  line1="#!${lpy}"
+  else
+  line1="/usr/local/bin/python3"
+  fi
 else
 lpy=`which python${piver112}`
 line1="#!${lpy}"
