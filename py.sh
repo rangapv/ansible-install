@@ -203,6 +203,7 @@ pipver=$( echo "pip -V")
 	      then
 		   piprelease
 	      fi
+              piprelease
 	      piprelease 3
 	      nw="pip3"
 	      ne="."
@@ -259,41 +260,37 @@ args1=${args[$((pargs-pargs))]}
 newpip="pip${args1}"
 file2=$( echo `which ${newpip}`)
 
-if [[ $pargs -eq 0 ]]
+if [[ ( $pargs -eq 0 ) ]]
 then
 piver=$(python -V 2>&1)
+zepip=`which python`
+zepips="$?"
+    if [[ ( $zepips -eq 0 ) ]]
+    then
+      file1="/usr/local/bin/pip"
+      line1="#!${zepip}"
+    else
+      file1="/usr/local/bin/pip"
+      line1="#!/usr/local/bin/python3"
+    fi
 else
 piver=$(python3 -V 2>&1)
-fi
-
 piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
 piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
-if [[ $pargs -eq 0 ]]
-then
-piver112="2"
-lpy=`which python${piver112}`
-lpys="$?"
-  if [[ ( $lpys -eq 0 ) ]]
-  then
-  line1="#!${lpy}"
-  else
-  line1="/usr/local/bin/python3"
-  fi
-else
+line1="#!/usr/local/bin/python3"
 lpy=`which python${piver112}`
 line1="#!${lpy}"
-fi
 file1="/usr/local/bin/pip${args1}"
+fi
+
 sudo sed -i "1s|^.*|${line1}|g" $file1
 line21="from pip._internal.cli.main import main"
 line22="from pip._internal import main"
 sudo sed -i "s|${line22}|${line21}|g" $file1
-nel=`which python`
-line3="#!${nel}"
 file3="/usr/local/bin/pip"
-sudo sed -i "1s|^.*|${line3}|" $file3
+
 c1=$(cat /etc/*-release | grep ID= | grep centos)
 if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
 then
