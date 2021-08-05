@@ -2,7 +2,7 @@
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
-declare -i pyuni
+declare -s pyuni
 pyupgrade() {
 pargs="$#"
 args=("$@")
@@ -20,11 +20,12 @@ se3=$( echo "${pyver2}" | awk '{split($0,a,".");print a[1]"."a[2]}')
 cd $se1 
 sudo ./configure --enable-optimizations
 sudo make altinstall
-slpy="python$se3"
+slpy="python${se3}"
 ver3=`which ${slpy}`
 pyuni="${slpy}"
 ver3s="$?"
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
+sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
 }
 
 sslupdate() {
@@ -354,7 +355,7 @@ then
 #	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
 	count=1
-	pip21 3
+	pip21
 	pipup
 #        ansible
 	fi
@@ -449,7 +450,7 @@ then
         sudo $cm1 -y install @development
         pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
         count=1
-	pip21 3
+	pip21
         pipup
 #        ansible
 elif [ ! -z "$mac" ]
