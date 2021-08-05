@@ -343,8 +343,8 @@ then
 #	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
 	count=1
+	pip21 3
 	pipup
-	pip21
 #        ansible
 	fi
 elif [ ! -z "$d1" ]
@@ -444,9 +444,9 @@ then
         sudo $cm1 -y install @development
         pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
         count=1
+	pip21 3
         pipup
-        pip21
-        ansible
+#        ansible
         if [[ ( $ryumchk -eq 1 ) ]]
         then
         sudo ln -sf $link /usr/bin/python 
