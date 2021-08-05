@@ -61,7 +61,6 @@ pipupgrade () {
 
 ansible () {
 
-sudo ln -sf ./python3 ./python
 sudo $cm1 install -y python3-pip
 sudo $cm1 install build-essential libssl-dev libffi-dev python-dev -y
 sudo $cm1 install selinux-utils
@@ -110,7 +109,7 @@ sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/sit
 
 
 lsbrelease() {
-
+ryumck=0
 if [[ ( ! -z $c1 ) || ( ! -z $r1 ) || ( ! -z $a1 ) ]]
 then	
 ryum=`which python`
@@ -119,6 +118,7 @@ if [[ ( $ryums -eq 0 ) ]]
 then
 link=$(readlink -f `which /usr/bin/python`)
 sudo ln -sf /usr/bin/python2 /usr/bin/python
+ryumck=1
 fi
 if [[ ! -z $c1 ]]
 then
@@ -126,21 +126,15 @@ sudo yum -y install redhat-lsb-core-4.1-27.el7.centos.1.x86_64
 fi
 if [[ ! -z $r1 ]]
 then
-
-rr=`cat /etc/*-release | grep VERSION_ID= | awk '{split($0,a,"="); print a[2]}' | awk '{split($0,a,"."); print a[1]}' | grep 8`
-rrs="$?"
-if [[ ( $rrs -eq 0 ) ]]
-then
-#sudo yum whatprovides redhat-lsb-core
-sudo yum -y install redhat-lsb-core-4.1-47.el8.i686
-fi
-rr=`cat /etc/*-release | grep VERSION_ID= | awk '{split($0,a,"="); print a[2]}' | awk '{split($0,a,"."); print a[1]}' | grep 7`
-rrs="$?"
-if [[ ( $rrs -eq 0 ) ]]
-then
-#sudo yum whatprovides redhat-lsb-core
-sudo yum -y install redhat-lsb-core-4.1-27.el7.x86_64 
-fi
+ rr=`cat /etc/*-release | grep VERSION_ID= | awk '{split($0,a,"=\""); print a[2]}' | awk '{split($0,a,"."); print a[1]}'`
+  if [[ ( $rr -eq 8 ) ]]
+  then
+  #sudo yum whatprovides redhat-lsb-core
+  sudo yum -y install redhat-lsb-core-4.1-47.el8.i686
+  elif [[ ( $rr -eq 7 ) ]]
+  then
+  sudo yum -y install redhat-lsb-core-4.1-27.el7.x86_64 
+  fi
 fi
 if [[ ! -z $a1 ]]
 then
@@ -269,9 +263,11 @@ piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
 if [[ $pargs -eq 0 ]]
 then
 piver112="2"
-line1="#!/usr/local/bin/python3.6"
+lpy=`which python${piver112}`
+line1="#!$lpy"
 else
-line1="#!/usr/local/bin/python${piver112}"
+lpy=`which python${piver112}`
+line1="#!$lpy"
 fi
 file1="/usr/local/bin/pip${args1}"
 sudo sed -i "1s|^.*|${line1}|g" $file1
@@ -435,9 +431,10 @@ then
         cm1="yum"
         ryum=`which python`
         ryums="$?"
+        ryumchk=0
         if [[ ( $ryums -eq 0 ) ]]
         then
-
+        ryumchk=1
         link=$(readlink -f `which /usr/bin/python`)
 	sudo ln -sf /usr/bin/python2 /usr/bin/python
         fi
@@ -450,9 +447,7 @@ then
         pipup
         pip21
         ansible
-        ryum=`which python`
-        ryums="$?"
-        if [[ ( $ryums -eq 0 ) ]]
+        if [[ ( $ryumchk -eq 1 ) ]]
         then
         sudo ln -sf $link /usr/bin/python 
         fi
