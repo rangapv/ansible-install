@@ -262,10 +262,10 @@ if [[ $pargs -eq 0 ]]
 then
 piver112="2"
 lpy=`which python${piver112}`
-line1="#!$lpy"
+line1="#!${lpy}"
 else
 lpy=`which python${piver112}`
-line1="#!$lpy"
+line1="#!${lpy}"
 fi
 file1="/usr/local/bin/pip${args1}"
 sudo sed -i "1s|^.*|${line1}|g" $file1
