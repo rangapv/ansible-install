@@ -226,7 +226,7 @@ pipup() {
 	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
 	      then
               link=$(readlink -f `which /usr/bin/python`)
-	      sudo ln -sf /usr/bin/python2 /usr/bin/python	     
+	     # sudo ln -sf /usr/bin/python2 /usr/bin/python	     
               eval "sudo $cm1 install -y python3-pip"
               eval "pip install --upgrade pip"
               eval "pip install awscli"
