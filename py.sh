@@ -2,7 +2,6 @@
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
-declare -i pyuni
 pyupgrade() {
 pargs="$#"
 args=("$@")
@@ -22,8 +21,8 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python${se3}"
 pyuni="${slpy}"
-sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
-sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
+`sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python`
+`sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3`
 }
 
 sslupdate() {
@@ -285,16 +284,16 @@ line22="from pip._internal import main"
 sudo sed -i "s|${line22}|${line21}|g" $file1
 file3="/usr/local/bin/pip"
 
-c1=$(cat /etc/*-release | grep ID= | grep centos)
 if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
 then
  line41="from pip._internal.cli.main import main"
  line31="from pip._internal import main"
+ sudo sed -i "s|${line31}|${line41}|g" $file3
 else
  line31="from pip._internal.cli.main import main"
  line41="from pip._internal import main"
+ sudo sed -i "s|${line31}|${line41}|g" $file3
 fi
-sudo sed -i "s|${line31}|${line41}|g" $file3
 
 if [[ $piver112 = "3.6" && -z $c1 && -z $r1 ]]
 then
