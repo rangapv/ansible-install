@@ -155,16 +155,11 @@ fi
 }
 
 yummy() {
-ryum=`which python`
-ryums="$?"
-if [[ ( $ryums -eq 0 ) ]]
-then
 filey="/usr/bin/yum"
-yum1="#!/usr/bin/python2"
+yum1="#!/usr/bin/python"
 sudo sed -i "1s|^.*|${yum1}|" $filey
 filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
-fi
 }
 
 pip21() {
@@ -195,19 +190,6 @@ pipupgrade $cm1
              else
               echo "pipver is >21"
              fi
-pipver=$( echo "pip -V")
-	      pipech=$( echo "$?" )
-	      if [ $pipech > 0 ]
-	      then
-		   piprelease
-	      fi
-              piprelease
-	      piprelease 3
-	      nw="pip3"
-	      ne="."
-              newpip="${nw}${ne}${piver33}"
-	      piprelease "${piver12}${ne}${piver33}"
- 	      echo `${newpip} -V`
 }
 
 
@@ -247,7 +229,20 @@ pipup() {
               eval "sudo $cm1 install -y python-boto3"
 	      fi
               echo "Success"
-
+              
+              pipver=$( echo "pip -V")
+              pipech=$( echo "$?" )
+              if [ $pipech > 0 ]
+              then
+                   piprelease
+              fi
+              piprelease
+              piprelease 3
+              nw="pip3"
+              ne="."
+              newpip="${nw}${ne}${piver33}"
+              piprelease "${piver12}${ne}${piver33}"
+              echo `${newpip} -V`
 }
 
 piprelease() {
@@ -441,9 +436,6 @@ then
 	fi
         yummy
         cm1="yum"
-        ryum=`which python`
-        ryums="$?"
-        ryumchk=0
 	sudo $cm1 -y update
         sudo $cm1 -y install wget
 	sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
