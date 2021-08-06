@@ -2,7 +2,7 @@
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
-declare -s pyuni
+declare -i pyuni
 pyupgrade() {
 pargs="$#"
 args=("$@")
@@ -143,9 +143,12 @@ if [[ ! -z $a1 ]]
 then
 sudo yum -y install system-lsb-core-4.1-27.amzn2.1.x86_64
 fi
-line10="#!/usr/bin/python2"
-file11="/usr/libexec/urlgrabber-ext-down"
-sudo sed -i "1s|^.*|${line10}|" $file11 
+ if [[ ( $ryumck -eq 1 ) ]]
+ then
+ line10="#!/usr/bin/python2"
+ file11="/usr/libexec/urlgrabber-ext-down"
+ sudo sed -i "1s|^.*|${line10}|" $file11 
+ fi
 fi
 if [[ ( ! -z $u1 ) ]]
 then
@@ -434,7 +437,7 @@ then
 	else
 	   echo "OS flavor cant be determined"
 	fi
-        yummy
+#        yummy
         cm1="yum"
 	sudo $cm1 -y update
         sudo $cm1 -y install wget
