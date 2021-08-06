@@ -211,7 +211,13 @@ pipup() {
 	      fi
 	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
 	      then
+              cyum=0
+              if [[ ( ! -z "$c1" ) ]]
+              then
               link=$(readlink -f `which /usr/bin/python`)
+              sudo ln -sf /usr/bin/python2 /usr/bin/python
+              cyum=1
+              fi
               eval "sudo $cm1 install -y python3-pip"
               eval "pip install --upgrade pip"
               eval "pip install awscli"
@@ -219,7 +225,11 @@ pipup() {
               eval "pip install boto3"
               eval "sudo $cm1 install -y python-boto"
               eval "sudo $cm1 install -y python-boto3"
-	      else     
+	      if [[ ( $cyum -eq 1 ) ]]
+              then
+              sudo ln -sf $link /usr/bin/python
+              fi
+              else     
 	      eval "sudo $cm1 install -y python3-pip"
 	      eval "pip3.${piver33} install --upgrade pip"
               eval "pip3.${piver33} install awscli"
@@ -435,11 +445,25 @@ then
 	   echo "OS flavor cant be determined"
 	fi
 #        yummy
+        cyum=0
+        if [[ ( ! -z "$c1" ) ]]
+        then
+          yummy
+        cm1="yum"
+        link=$(readlink -f `which /usr/bin/python`)
+	sudo ln -sf /usr/bin/python2 /usr/bin/python
+        cyum=1
+         fi
+
         cm1="yum"
 	sudo $cm1 -y update
         sudo $cm1 -y install wget
 	sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
         sudo $cm1 -y install @development
+        if [[ ( $cyum -eq 1 ) ]]
+        then
+          sudo ln -sf $link /usr/bin/python 
+        fi
         pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
         count=1
 	pip21
