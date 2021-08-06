@@ -21,9 +21,7 @@ cd $se1
 sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python${se3}"
-ver3=`which ${slpy}`
 pyuni="${slpy}"
-ver3s="$?"
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python
 sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3
 }
