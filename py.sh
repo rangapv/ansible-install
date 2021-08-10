@@ -356,9 +356,10 @@ then
         sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
-#	zlibadd
-#	sslupdate $cm1 
+	zlibadd
+	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+        lbrelease
 	count=1
 	pip21
 	pipup
@@ -383,9 +384,14 @@ then
 	sudo $cm1 -y update
 	sudo $cm1 -y upgrade
 	sudo $cm1 -y install gcc make wget libffi-dev 
-        zlibadd
+	zlibadd
 	sslupdate $cm1 
-        count=1
+	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+	lbrelease
+	count=1
+	pip21
+	pipup
+#        ansible
         fi
 
 elif [ ! -z "$f1" ]
