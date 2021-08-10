@@ -285,13 +285,15 @@ piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
 line1="#!/usr/local/bin/python3"
 lpy=`which python${piver112}`
 line1="#!${lpy}"
-file1="/usr/local/bin/pip${args1}"
+file1="/usr/local/bin/${newpip}"
 fi
 
 sudo sed -i "1s|^.*|${line1}|g" $file1
+sudo sed -i "1s|^.*|${line1}|g" $file2
 line21="from pip._internal.cli.main import main"
 line22="from pip._internal import main"
 sudo sed -i "s|${line22}|${line21}|g" $file1
+sudo sed -i "s|${line22}|${line21}|g" $file2
 file3="/usr/local/bin/pip"
 
 if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
