@@ -59,24 +59,6 @@ pipupgrade () {
       fi
 }
 
-ansible () {
-
-sudo $cm1 install -y python3-pip
-sudo $cm1 install build-essential libssl-dev libffi-dev python-dev -y
-sudo $cm1 install selinux-utils
-sudo $cm1 install -y policycoreutils
-sudo $cm1 install selinux-basics
-sudo setenforce 0
-sudo $cm1 update
-sudo $cm1 install software-properties-common
-sudo $cm1 update
-sudo -H pip install ansible
-ansible --version
-ansible -m ping localhost
-
-
-}
-
 susepyup(){
 sudo zypper -y install git
 
@@ -331,6 +313,12 @@ else
 fi
 
 
+if [[ ( "$#" -eq 0 ) ]]
+then
+	set -- "3.9.4" "Python-3.9.4.tgz"
+fi
+
+
 if [ -z "$mac" ]
 then
 
@@ -360,12 +348,11 @@ then
 	sudo $cm1 -y update
 	zlibadd
 	sslupdate $cm1 
-	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+	pyupgrade https://www.python.org/ftp/python/ $1 $2
         lbrelease
 	count=1
 	pip21
 	pipup
-#        ansible
 	fi
 elif [ ! -z "$d1" ]
 then
@@ -388,12 +375,11 @@ then
 	sudo $cm1 -y install gcc make wget libffi-dev 
 	zlibadd
 	sslupdate $cm1 
-	pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+	pyupgrade https://www.python.org/ftp/python/ $1 $2 
 	lbrelease
 	count=1
 	pip21
 	pipup
-#        ansible
         fi
 
 elif [ ! -z "$f1" ]
@@ -472,11 +458,10 @@ then
         then
           sudo ln -sf $link /usr/bin/python 
         fi
-        pyupgrade https://www.python.org/ftp/python/ 3.10.0 Python-3.10.0a6.tgz
+        pyupgrade https://www.python.org/ftp/python/ $1 $2 
         count=1
 	pip21
         pipup
-#        ansible
 elif [ ! -z "$mac" ]
 then
 	echo "It is a Mac"
