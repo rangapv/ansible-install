@@ -1,6 +1,7 @@
 #!/bin/bash
 set -E
-source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/py.sh)
+#source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/py.sh)
+source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
 
 ansible() {
 
@@ -12,7 +13,6 @@ sudo $cm1 install selinux-basics
 sudo setenforce 0
 sudo $cm1 update
 sudo $cm1 install software-properties-common
-sudo $cm1 update
 sudo -H pip install ansible
 ansible --version
 ansible -m ping localhost
