@@ -174,9 +174,6 @@ pipupgrade $cm1
              fi
 }
 
-
-
-
 pipup() {
 	      piver=$(python -V 2>&1)
               piverec=$(echo "$?")
@@ -248,7 +245,7 @@ file2=$( echo `which ${newpip}`)
 if [[ ( $pargs -eq 0 ) ]]
 then
 piver=$(python -V 2>&1)
-zepip=`which python`
+zepip=`which python3`
 zepips="$?"
     if [[ ( $zepips -eq 0 ) ]]
     then
@@ -264,7 +261,7 @@ piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
 piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
-line1="#!/usr/local/bin/python3"
+#line1="#!/usr/local/bin/python3"
 lpy=`which python${piver112}`
 line1="#!${lpy}"
 file1="/usr/local/bin/${newpip}"
@@ -283,10 +280,10 @@ then
  line41="from pip._internal.cli.main import main"
  line31="from pip._internal import main"
  sudo sed -i "s|${line31}|${line41}|g" $file3
-else
- line31="from pip._internal.cli.main import main"
- line41="from pip._internal import main"
- sudo sed -i "s|${line31}|${line41}|g" $file3
+#else
+# line31="from pip._internal.cli.main import main"
+# line41="from pip._internal import main"
+# sudo sed -i "s|${line31}|${line41}|g" $file3
 fi
 
 if [[ $piver112 = "3.6" && -z $c1 && -z $r1 ]]
@@ -315,7 +312,7 @@ fi
 
 if [[ ( "$#" -eq 0 ) ]]
 then
-	set -- "3.9.4" "Python-3.9.4.tgz"
+	set -- "3.8.7" "Python-3.8.7.tgz"
 fi
 
 
