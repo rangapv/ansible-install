@@ -298,8 +298,22 @@ pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a
 
 
 # Function declaration ends
+sethelp() {
 
+	echo "Usage: ./py.sh 3.8.0 Python-3.8.0.tgz "
+	echo "       First-argument is this script executable"
+	echo "       Second-argument is the Python version 3.8.x "
+        echo "       Third-argument is the Python tar file name Python-3.8.x.tgz (check website for specific https://www.python.org/ftp/python/) "
+        echo "       If \"NO\" second and third argument given then defaults to version set in the script"
+}
 
+while getopts ":h" option; do
+   case $option in
+      h) # display Help
+         sethelp 
+         exit;;
+   esac
+done
 
 if [[ ( "$#" -eq 0 ) ]]
 then
@@ -309,6 +323,8 @@ then
 	#set -- "3.7.9" "Python-3.7.9.tgz"
 	#set -- "3.6.12" "Python-3.6.12.tgz" 
 
+fi
+
    pyvercheck python3
 
    if [[ ( "$piver1" = "$1" ) ]]
@@ -316,7 +332,6 @@ then
       echo "Requirement Satisifed nothing to upgrade or install"
       exit
    fi
-fi
 
 if [ $(echo "$li" | grep Linux) ]
 then
