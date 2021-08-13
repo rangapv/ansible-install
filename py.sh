@@ -316,12 +316,6 @@ piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}') ## Dispalys the
 
 # Function declaration ends
 
-if [ $(echo "$li" | grep Linux) ]
-then
-  mac=""
-else
-  mac=$(sw_vers | grep Mac)
-fi
 
 
 if [[ ( "$#" -eq 0 ) ]]
@@ -334,13 +328,19 @@ then
 
    pyvercheck python3
 
-   if [[ ( $piver1 -eq $1 ) ]]
+   if [[ ( "$piver1" = "$1" ) ]]
    then
       echo "Requirement Satisifed nothing to upgrade or install"
       exit
    fi
 fi
 
+if [ $(echo "$li" | grep Linux) ]
+then
+  mac=""
+else
+  mac=$(sw_vers | grep Mac)
+fi
 
 if [ -z "$mac" ]
 then
