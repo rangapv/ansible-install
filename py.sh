@@ -39,10 +39,7 @@ pipupgrade () {
       pipargs="$#"
       pargs=("$@")
       pargs1=${pargs[$((pipargs-pipargs))]}
-      piver=$(python -V 2>&1)
-      piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
-      piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
-      piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+      pyvercheck python
 
       if [ $piver12 = "2" ]
       then
@@ -76,11 +73,7 @@ zlibadd() {
 
 lbrelease() {
 file1="/usr/bin/lsb_release"
-piver=$(python -V 2>&1)
-piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
-piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
-piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
-pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
+pyvercheck python
 
 line1="#!/usr/local/bin/python${pyvert}"
 sudo sed -i "1s|^.*|${line1}|" $file1 
@@ -147,11 +140,7 @@ sudo sed -i "1s|^.*|${yum1}|" $filez
 pip21() {
 pipupgrade $cm1
              declare -i pipver1
-              
-             piver=$(python -V 2>&1)
-             piver11=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
-             piver12=$( echo "${piver11}" | awk '{split($0,a,".");print a[1]}')
-             piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+             pyvercheck python              
              pipadd="pip3.${piver33}"
 	     pipv=$( echo "$pipadd --version")
              pipret=$( echo "$?" )
@@ -180,9 +169,7 @@ pipup() {
 	      piver34=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
 	      piverwh=$(which python)
 	      piverwhec=$(echo "$?")
-              piver11=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
-              piver12=$( echo "${piver11}" | awk '{split($0,a,".");print a[1]}')
-              piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+              pyvercheck python 
 	      if [[ ( ! -z "$u1" || ! -z "$d1" ) && ( $piver34 = "6" ) && ( $piverwhec < 1) && ($piverec < 1) ]]
               then
               eval "sudo ln -sf /usr/local/bin/python3.6 /usr/bin/python3"
@@ -244,7 +231,6 @@ file2=$( echo `which ${newpip}`)
 
 if [[ ( $pargs -eq 0 ) ]]
 then
-piver=$(python -V 2>&1)
 zepip=`which python3`
 zepips="$?"
     if [[ ( $zepips -eq 0 ) ]]
@@ -256,11 +242,7 @@ zepips="$?"
       line1="#!/usr/local/bin/${pyuni}"
     fi
 else
-piver=$(python3 -V 2>&1)
-piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}')
-piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}')
-piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
-piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+pyvercheck python3
 #line1="#!/usr/local/bin/python3"
 lpy=`which python${piver112}`
 line1="#!${lpy}"
@@ -310,6 +292,7 @@ piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}') ## Strips the py
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}') ## Strips the version suffix leaving only the higer order version 2/3 etc.."
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }') ## Leaves the first two vrsion info and strips the last number eg...3.9
 piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}') ## Dispalys the middle version number 9 in Python 3.9.4
+pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
 
 }
 
