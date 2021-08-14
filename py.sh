@@ -185,24 +185,14 @@ pipup() {
               cyum=1
               fi
               eval "sudo $cm1 install -y python3-pip"
-              eval "pip install --upgrade pip"
-              eval "pip install awscli"
-              eval "pip install boto"
-              eval "pip install boto3"
-              eval "sudo $cm1 install -y python-boto"
-              eval "sudo $cm1 install -y python-boto3"
+              pipaddons pip
 	      if [[ ( $cyum -eq 1 ) ]]
               then
               sudo ln -sf $link /usr/bin/python
               fi
               else     
 	      eval "sudo $cm1 install -y python3-pip"
-	      eval "pip3.${piver33} install --upgrade pip"
-              eval "pip3.${piver33} install awscli"
-              eval "pip3.${piver33} install boto"
-              eval "pip3.${piver33} install boto3"
-              eval "sudo $cm1 install -y python-boto"
-              eval "sudo $cm1 install -y python-boto3"
+	      pipaddons pip3.${piver33}
 	      fi
               echo "Success"
               
@@ -296,16 +286,27 @@ pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a
 
 }
 
+pipaddons() {
+argpipadd="$@"
 
-# Function declaration ends
+              eval "${argpipadd[@]} install --upgrade pip"
+              eval "${argpipadd[@]} install awscli"
+              eval "${argpipadd[@]} install boto"
+              eval "${argpipadd[@]} install boto3"
+              eval "$cm1 install -y python-boto"
+              eval "$cm1 install -y python-boto3"
+}
+
 sethelp() {
-
 	echo "Usage: ./py.sh 3.8.0 Python-3.8.0.tgz "
 	echo "       First-argument is this script executable"
 	echo "       Second-argument is the Python version 3.8.x "
         echo "       Third-argument is the Python tar file name Python-3.8.x.tgz (check website for specific https://www.python.org/ftp/python/) "
         echo "       If \"NO\" second and third argument given then defaults to version set in the script"
 }
+
+# Function declaration ends
+
 
 while getopts ":h" option; do
    case $option in
