@@ -369,20 +369,22 @@ then
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
 	sudo $cm1 -y upgrade
+	zlibadd
+	sslupdate $cm1 
+        lbrelease
 	pyv=`which python`
 	pyvs="$?"
 	if [[ ( $pyvs -ne 0 ) ]]
 	then
 		sudo $cm1 -y install python
 	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+	        pip21
+	        pipup
 	fi
-	zlibadd
-	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ $1 $2
-        lbrelease
-	count=1
 	pip21
 	pipup
+	count=1
 	fi
 elif [ ! -z "$d1" ]
 then
