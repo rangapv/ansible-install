@@ -3,7 +3,7 @@ set -E
 #source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/py.sh)
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
 
-ansible() {
+ansibleins() {
 
 sudo $cm1 -y install python3-pip
 sudo $cm1 -y install build-essential libssl-dev libffi-dev python-dev
@@ -20,4 +20,4 @@ ansible -m ping localhost
 }
 
 echo "Installing ansible"
-ansible
+ansibleins

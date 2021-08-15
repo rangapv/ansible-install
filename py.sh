@@ -368,6 +368,14 @@ then
         sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
+	sudo $cm1 -y upgrade
+	pyv=`which python`
+	pyvs="$?"
+	if [[ ( $pyvs -ne 0 ) ]]
+	then
+		sudo $cm1 -y install python
+	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+	fi
 	zlibadd
 	sslupdate $cm1 
 	pyupgrade https://www.python.org/ftp/python/ $1 $2
