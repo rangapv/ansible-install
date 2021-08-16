@@ -221,22 +221,15 @@ file2=$( echo `which ${newpip}`)
 
 if [[ ( $pargs -eq 0 ) ]]
 then
-zepip=`which python3`
-zepips="$?"
-    if [[ ( $zepips -eq 0 ) ]]
-    then
-      file1="/usr/local/bin/pip"
-      line1="#!${zepip}"
-    else
+pyvercheck python
       file1="/usr/local/bin/pip"
       line1="#!/usr/local/bin/${pyuni}"
-    fi
 else
 pyvercheck python3
 #line1="#!/usr/local/bin/python3"
-lpy=`which python${piver112}`
-line1="#!${lpy}"
-file1="/usr/local/bin/${newpip}"
+     lpy=`which python${piver112}`
+     line1="#!${lpy}"
+     file1="/usr/local/bin/${newpip}"
 fi
 
 sudo sed -i "1s|^.*|${line1}|g" $file1
@@ -263,7 +256,7 @@ then
  sudo sed -i "1s|^.*|${line1}|" $file2 
  line3="from pip._internal.cli.main import main"
  line4="from pip._internal import main"
- sudo sed -i "s|${line3}|${line4}|g" $file2
+ sudo sed -i "s|${line4}|${line3}|g" $file2
 elif [[ $piver112 = "3.6" &&  ( ! -z $c1 || ! -z $r1 ) ]]
 then
  sudo sed -i "1s|^.*|${line1}|" $file2 
@@ -278,12 +271,16 @@ pyvercheck() {
 args2="$@"
 
 piver=$(${args2[@]} -V 2>&1)
+piversc="$?"
+if [[ ( $piversc -eq 0 ) ]]
+then
 piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}') ## Strips the python prefix eg... 3.9.4 etc
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}') ## Strips the version suffix leaving only the higer order version 2/3 etc.."
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }') ## Leaves the first two vrsion info and strips the last number eg...3.9
 piver33=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}') ## Dispalys the middle version number 9 in Python 3.9.4
 pyvert=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }')
-
+pyuni="python${piver12}"
+fi
 }
 
 pipaddons() {
@@ -381,9 +378,9 @@ then
 	        pip21
 	        pipup
 	fi
-	pyupgrade https://www.python.org/ftp/python/ $1 $2
-	pip21
-	pipup
+#	pyupgrade https://www.python.org/ftp/python/ $1 $2
+#	pip21
+#	pipup
 	count=1
 	fi
 elif [ ! -z "$d1" ]
