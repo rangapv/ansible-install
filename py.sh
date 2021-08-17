@@ -223,7 +223,7 @@ if [[ ( $pargs -eq 0 ) ]]
 then
 pyvercheck python
       file1="/usr/local/bin/pip"
-      line1="#!/usr/local/bin/${pyuni}"
+      line1="#!${wchpy}"
 else
 pyvercheck python3
 #line1="#!/usr/local/bin/python3"
@@ -274,6 +274,7 @@ piver=$(${args2[@]} -V 2>&1)
 piversc="$?"
 if [[ ( $piversc -eq 0 ) ]]
 then
+wchpy=`which python`
 piver1=$( echo "${piver}" | awk '{split($0,a," ");print a[2]}') ## Strips the python prefix eg... 3.9.4 etc
 piver12=$( echo "${piver1}" | awk '{split($0,a,".");print a[1]}') ## Strips the version suffix leaving only the higer order version 2/3 etc.."
 piver112=$( echo "${piver1}" | awk '{split($0,a,"."); for (i=1; i<2 ; i++) print a[i]"."a[i+1]; }') ## Leaves the first two vrsion info and strips the last number eg...3.9
@@ -368,16 +369,25 @@ then
 	sudo $cm1 -y upgrade
 	zlibadd
 	sslupdate $cm1 
-        lbrelease
+#        lbrelease
 	pyv=`which python`
 	pyvs="$?"
 	if [[ ( $pyvs -ne 0 ) ]]
 	then
 		sudo $cm1 -y install python
-	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
 	        pip21
 	        pipup
+        else
+		pyvercheck python
+		if [[ ( $piver12 -eq 2 ) ]]
+		then
+           	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+	                pip21
+	                pipup
+        	fi
+
 	fi
+	
 #	pyupgrade https://www.python.org/ftp/python/ $1 $2
 #	pip21
 #	pipup
