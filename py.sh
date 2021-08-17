@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
@@ -21,8 +21,9 @@ sudo ./configure --enable-optimizations
 sudo make altinstall
 slpy="python${se3}"
 pyuni="${slpy}"
-`sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python`
-`sudo ln -sf "/usr/local/bin/${slpy}" /usr/bin/python3`
+wchpyuni=`which ${slpy}`
+`sudo ln -sf "${wchpyuni}" /usr/bin/python`
+`sudo ln -sf "${wchpyuni}" /usr/bin/python3`
 }
 
 sslupdate() {
@@ -75,7 +76,7 @@ lbrelease() {
 file1="/usr/bin/lsb_release"
 pyvercheck python
 
-line1="#!/usr/local/bin/python${pyvert}"
+line1="#!${wchpy}"
 sudo sed -i "1s|^.*|${line1}|" $file1 
 
 sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/site-packages/lsb_release.py
@@ -229,7 +230,8 @@ pyvercheck python3
 #line1="#!/usr/local/bin/python3"
      lpy=`which python${piver112}`
      line1="#!${lpy}"
-     file1="/usr/local/bin/${newpip}"
+     newwchpip=`which ${newpip}`
+     file1="${newwchpip}"
 fi
 
 sudo sed -i "1s|^.*|${line1}|g" $file1
