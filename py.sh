@@ -22,8 +22,9 @@ sudo make altinstall
 slpy="python${se3}"
 pyuni="${slpy}"
 wchpyuni=`which ${slpy}`
-`sudo ln -sf "${wchpyuni}" /usr/bin/python`
+wchpyth=`which python`
 `sudo ln -sf "${wchpyuni}" /usr/bin/python3`
+`sudo ln -sf /usr/bin/python3 ${wchpyth}`
 }
 
 sslupdate() {
@@ -218,35 +219,50 @@ args=("$@")
 #args2=${args[$((pargs-1))]}
 args1=${args[$((pargs-pargs))]}
 newpip="pip${args1}"
-file2=$( echo `which ${newpip}`)
+file2=`which ${newpip}`
+file2s="$?"
 
 if [[ ( $pargs -eq 0 ) ]]
 then
 pyvercheck python
-      file1="/usr/local/bin/pip"
+      file1=`which pip`
+      file1s="$?"
       line1="#!${wchpy}"
 else
 pyvercheck python3
 #line1="#!/usr/local/bin/python3"
      lpy=`which python${piver112}`
      line1="#!${lpy}"
-     newwchpip=`which ${newpip}`
-     file1="${newwchpip}"
+     file1=`which ${newpip}`
+     file1s="$?"
 fi
 
-sudo sed -i "1s|^.*|${line1}|g" $file1
-sudo sed -i "1s|^.*|${line1}|g" $file2
 line21="from pip._internal.cli.main import main"
 line22="from pip._internal import main"
-sudo sed -i "s|${line22}|${line21}|g" $file1
+
+if [[ ( $file2s -eq 0 ) ]]
+then
+sudo sed -i "1s|^.*|${line1}|g" $file2
 sudo sed -i "s|${line22}|${line21}|g" $file2
-file3="/usr/local/bin/pip"
+fi
+
+if [[ ( $file1s -eq 0 ) ]]
+then
+sudo sed -i "1s|^.*|${line1}|g" $file1
+sudo sed -i "s|${line22}|${line21}|g" $file1
+fi
+
+file3=`which pip`
+file3s="$?"
 
 if [[ ! -z $c1 || ! -z $r1 || ! -z $s1 ]]
 then
  line41="from pip._internal.cli.main import main"
  line31="from pip._internal import main"
+ if [[ ( $file3s -eq 0 ) ]]
+ then
  sudo sed -i "s|${line31}|${line41}|g" $file3
+ fi
 #else
 # line31="from pip._internal.cli.main import main"
 # line41="from pip._internal import main"
@@ -255,16 +271,22 @@ fi
 
 if [[ $piver112 = "3.6" && -z $c1 && -z $r1 ]]
 then
- sudo sed -i "1s|^.*|${line1}|" $file2 
- line3="from pip._internal.cli.main import main"
- line4="from pip._internal import main"
- sudo sed -i "s|${line4}|${line3}|g" $file2
+	if [[ ( $file2s -eq 0 ) ]]
+	then
+           sudo sed -i "1s|^.*|${line1}|" $file2 
+           line3="from pip._internal.cli.main import main"
+           line4="from pip._internal import main"
+           sudo sed -i "s|${line4}|${line3}|g" $file2
+        fi
 elif [[ $piver112 = "3.6" &&  ( ! -z $c1 || ! -z $r1 ) ]]
 then
- sudo sed -i "1s|^.*|${line1}|" $file2 
- line4="from pip._internal.cli.main import main"
- line3="from pip._internal import main"
- sudo sed -i "s|${line3}|${line4}|g" $file2
+	if [[ ( $file2s -eq 0 ) ]]
+	then
+           sudo sed -i "1s|^.*|${line1}|" $file2 
+           line4="from pip._internal.cli.main import main"
+           line3="from pip._internal import main"
+           sudo sed -i "s|${line3}|${line4}|g" $file2
+        fi
 fi
 
 }
