@@ -401,7 +401,6 @@ then
 	sudo $cm1 -y upgrade
 	zlibadd
 	sslupdate $cm1 
-#        lbrelease
         pyv=`which python`
 	pyvs="$?"
 	if [[ ( $pyvs -ne 0 ) ]]
@@ -409,6 +408,7 @@ then
 		sudo $cm1 -y install python
 	        pip21
                 pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+                lbrelease
 	        pip21 3
 		pyvercheck python
 		pip21 ${piver112}
@@ -419,6 +419,7 @@ then
 		echo "Requirement satisfied Python is already in version $pyver1"
 	else 
                 pyupgrade https://www.python.org/ftp/python/ $1 $2
+	        lbrelease
 		pyvercheck python
         	pip21 ${piver112}
 	fi
