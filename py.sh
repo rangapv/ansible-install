@@ -48,11 +48,13 @@ pipupgrade () {
 	 sudo $pargs1 install -y python-pip
          sudo pip install --upgrade pip
 	 piprelease
+	 pipup
       elif [[ ( $pargs -eq 3 ) ]]
       then
          sudo $pargs1 install -y python3-pip
 	 sudo pip3 install --upgrade pip
 	 piprelease 3
+	 pipup 3
       else
 	 echo "This should not happen"
       fi
@@ -140,7 +142,10 @@ sudo sed -i "1s|^.*|${yum1}|" $filez
 }
 
 pip21() {
-pipupgrade $cm1
+        pip21arg1="$#"
+	pip21arg2="$@"
+	
+ 	pipupgrade $pip21arg2
              declare -i pipver1
              pyvercheck python              
              pipadd="pip3.${piver33}"
@@ -166,36 +171,42 @@ pipupgrade $cm1
 }
 
 pipup() {
-	      piver=$(python -V 2>&1)
+	     
+          pipuparg1="$#"
+          pipuparg2="$@"	  
+	  pipflag=0
+	  piver=$(python -V 2>&1)
               piverec=$(echo "$?")
 	      piver34=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
 	      piverwh=$(which python)
 	      piverwhec=$(echo "$?")
-              pyvercheck python 
-	      if [[ ( ! -z "$u1" || ! -z "$d1" ) && ( $piver34 = "6" ) && ( $piverwhec < 1) && ($piverec < 1) ]]
-              then
-              eval "sudo ln -sf /usr/local/bin/python3.6 /usr/bin/python3"
-              eval "sudo ln -sf /usr/bin/python3 /usr/bin/python"
+	      if [[ ( $pipuparg2 -eq 0 ) ]]
+	      then 
+	             pyvercheck python 
+                     pipflag=1 
+	      else
+		      pyvercheck python${pipuparg2}
 	      fi
-	      if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
-	      then
-              cyum=0
-              if [[ ( ! -z "$c1" ) ]]
+	         if [[ ! -z "$c1" || ! -z "$r1" || ! -z "$a1" ]]
+	         then
+                  cyum=0
+                    if [[ ( ! -z "$c1" ) ]]
+                    then
+                      link=$(readlink -f `which /usr/bin/python`)
+                      sudo ln -sf /usr/bin/python2 /usr/bin/python
+                      cyum=1
+                    fi
+	          fi    
+              if [[ ( $pipflag -eq 1 ) ]]
               then
-              link=$(readlink -f `which /usr/bin/python`)
-              sudo ln -sf /usr/bin/python2 /usr/bin/python
-              cyum=1
-              fi
-              eval "sudo $cm1 install -y python3-pip"
-              pipaddons pip
-	      if [[ ( $cyum -eq 1 ) ]]
-              then
-              sudo ln -sf $link /usr/bin/python
-              fi
-              else     
-	      eval "sudo $cm1 install -y python3-pip"
-	      pipaddons pip3.${piver33}
+                  pipaddons pip
+	      else
+		  pipaddons pip${pipuparg2}
 	      fi
+	         if [[ ( $cyum -eq 1 ) ]]
+                 then
+                  sudo ln -sf $link /usr/bin/python
+                 fi
               echo "Success"
               
               pipver=$( echo "pip -V")
@@ -204,13 +215,10 @@ pipup() {
               then
                    piprelease
               fi
-              piprelease
-              piprelease 3
               nw="pip3"
               ne="."
               newpip="${nw}${ne}${piver33}"
-              piprelease "${piver12}${ne}${piver33}"
-              echo `${newpip} -V`
+	      echo `${newpip} -V`
 }
 
 piprelease() {
@@ -341,10 +349,10 @@ done
 if [[ ( "$#" -eq 0 ) ]]
 then
 	#set -- "3.10.0" "Python-3.10.0a6.tgz"
-	set -- "3.9.4" "Python-3.9.4.tgz"
+	#set -- "3.9.4" "Python-3.9.4.tgz"
 	#set -- "3.8.7" "Python-3.8.7.tgz"
 	#set -- "3.7.9" "Python-3.7.9.tgz"
-	#set -- "3.6.12" "Python-3.6.12.tgz" 
+	set -- "3.6.12" "Python-3.6.12.tgz" 
 
 fi
 
@@ -394,27 +402,26 @@ then
 	zlibadd
 	sslupdate $cm1 
 #        lbrelease
-	pyv=`which python`
+        pyv=`which python`
 	pyvs="$?"
 	if [[ ( $pyvs -ne 0 ) ]]
 	then
 		sudo $cm1 -y install python
 	        pip21
-	        pipup
-        else
+                pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+	        pip21 3
 		pyvercheck python
-		if [[ ( $piver12 -eq 2 ) ]]
-		then
-           	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
-	                pip21 3
-	                pipup
-        	fi
-
+		pip21 ${piver112}
+        fi 
+	pyvercheck python
+        if [[ ( $pyver1 -eq $1 ) ]]
+	then
+		echo "Requirement satisfied Python is already in version $pyver1"
+	else 
+                pyupgrade https://www.python.org/ftp/python/ $1 $2
+		pyvercheck python
+        	pip21 ${piver112}
 	fi
-	
-#	pyupgrade https://www.python.org/ftp/python/ $1 $2
-#	pip21
-#	pipup
 	count=1
 	fi
 elif [ ! -z "$d1" ]
