@@ -43,12 +43,12 @@ pipupgrade () {
       pargs1=${pargs[$((pipargs-pipargs))]}
       pyvercheck python
 
-      if [ $piver12 = "2" ]
+      if [[ ( $pargs -eq 0 ) ]]
       then
 	 sudo $pargs1 install -y python-pip
          sudo pip install --upgrade pip
 	 piprelease
-      elif [ $piver12 = "3" ]
+      elif [[ ( $pargs -eq 3 ) ]]
       then
          sudo $pargs1 install -y python3-pip
 	 sudo pip3 install --upgrade pip
@@ -406,7 +406,7 @@ then
 		if [[ ( $piver12 -eq 2 ) ]]
 		then
            	        pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
-	                pip21
+	                pip21 3
 	                pipup
         	fi
 
