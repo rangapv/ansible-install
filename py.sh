@@ -350,9 +350,9 @@ if [[ ( "$#" -eq 0 ) ]]
 then
 	#set -- "3.10.0" "Python-3.10.0a6.tgz"
 	#set -- "3.9.4" "Python-3.9.4.tgz"
-	#set -- "3.8.7" "Python-3.8.7.tgz"
+	set -- "3.8.7" "Python-3.8.7.tgz"
 	#set -- "3.7.9" "Python-3.7.9.tgz"
-	set -- "3.6.12" "Python-3.6.12.tgz" 
+	#set -- "3.6.12" "Python-3.6.12.tgz" 
 
 fi
 
@@ -387,7 +387,12 @@ then
 	mi2="${mi,,}"
 	ji=$(cat /etc/*-release | grep DISTRIB_ID | awk '{split($0,a,"=");print a[2]}')
 	ki="${ji,,}"
-
+	pyvercheck python
+        if [[ ( $pyver1 -eq $1 ) ]]
+        then
+                echo "Requirement satisfied Python is already in version $pyver1"
+                exit
+	fi	
 	if [ "$ki" = "ubuntu" ]
 	then
    	echo "IT IS UBUNTU"
