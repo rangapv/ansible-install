@@ -327,6 +327,59 @@ argpipadd="$@"
               eval "$cm1 install -y python-boto3"
 }
 
+pythoninstalls() {
+
+        pyv=`which python`
+	pyvs="$?"
+	if [[ ( $pyvs -ne 0 ) ]]
+	then
+		sudo $cm1 -y install python
+	        pip21
+                pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
+                lbrelease
+	        pip21 3
+		pyvercheck python
+		pip21 ${piver112}
+        fi 
+	pyvercheck python
+	if [[ ( $piver1 <  $cmd1 ) ]]
+	then
+		echo "Upgrading Python to versio $cmd1"	
+                pyupgrade https://www.python.org/ftp/python/ $cmd1 $cmd2
+	        lbrelease
+		pyvercheck python
+        	pip21 ${piver112}
+	fi
+}
+
+pythoncurrent() {
+        pyv=`which python`
+	pyvs="$?"
+	if [[ ( $pyvs -ne 0 ) ]]
+	then
+            echo "No Python Found; GREENFIELD Installs proceeding"
+	fi 
+	pyvercheck python
+        if [[ ( $piver1 > $cmd1 ) ]]
+	then
+		echo "True"
+	fi
+
+	if [[ ( $piver1 = $cmd1 ) ]]
+	then
+		echo "Requirement satisfied Python is already in version \"${piver1}\" "
+	        exit
+	elif [[ ( $piver1 < $cmd1 ) ]]
+	then
+		echo "Upgrading Python to $cmd1"	
+
+	elif [[ ( $piver1 > $cmd1 ) ]]
+	then
+		echo "The current version of Python ${piver1} is Higher than the request $cmd1 ;exiting"
+		exit
+	fi
+}
+
 sethelp() {
 	echo "Usage: ./py.sh 3.8.0 Python-3.8.0.tgz "
 	echo "       First-argument is this script executable"
@@ -355,14 +408,9 @@ then
 	#set -- "3.6.12" "Python-3.6.12.tgz" 
 
 fi
-
-   pyvercheck python3
-
-   if [[ ( "$piver1" = "$1" ) ]]
-   then
-      echo "Requirement Satisifed nothing to upgrade or install"
-      exit
-   fi
+   cmd1=$1
+   cmd2=$2
+   pyvercheck python
 
 if [ $(echo "$li" | grep Linux) ]
 then
@@ -388,11 +436,7 @@ then
 	ji=$(cat /etc/*-release | grep DISTRIB_ID | awk '{split($0,a,"=");print a[2]}')
 	ki="${ji,,}"
 	pyvercheck python
-        if [[ ( $pyver1 -eq $1 ) ]]
-        then
-                echo "Requirement satisfied Python is already in version $pyver1"
-                exit
-	fi	
+	pythoncurrent
 	if [ "$ki" = "ubuntu" ]
 	then
    	echo "IT IS UBUNTU"
@@ -406,28 +450,7 @@ then
 	sudo $cm1 -y upgrade
 	zlibadd
 	sslupdate $cm1 
-        pyv=`which python`
-	pyvs="$?"
-	if [[ ( $pyvs -ne 0 ) ]]
-	then
-		sudo $cm1 -y install python
-	        pip21
-                pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
-                lbrelease
-	        pip21 3
-		pyvercheck python
-		pip21 ${piver112}
-        fi 
-	pyvercheck python
-        if [[ ( $pyver1 -eq $1 ) ]]
-	then
-		echo "Requirement satisfied Python is already in version $pyver1"
-	else 
-                pyupgrade https://www.python.org/ftp/python/ $1 $2
-	        lbrelease
-		pyvercheck python
-        	pip21 ${piver112}
-	fi
+	pythoninstalls
 	count=1
 	fi
 elif [ ! -z "$d1" ]
