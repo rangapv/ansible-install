@@ -49,12 +49,16 @@ pipupgrade () {
          sudo pip install --upgrade pip
 	 piprelease
 	 pipup
-      elif [[ ( $pargs -eq 3 ) ]]
+      elif [[ ( $pargs = 3 ) ]]
       then
          sudo $pargs1 install -y python3-pip
 	 sudo pip3 install --upgrade pip
 	 piprelease 3
 	 pipup 3
+      elif [[ ( $pargs = ${piver112} ) ]]
+      then
+	      piprelease ${piver112}
+	      pipup ${piver112}
       else
 	 echo "This should not happen"
       fi
@@ -157,8 +161,6 @@ pip21() {
 	     pipver=$( echo "$pipv" | awk '{split($0,a," ");print a[2]}')
              pipver1=$( echo "$pipver" | awk '{split($0,a,".");print a[1]}')
              fi 
-          #    echo "eval $(declare -p pipver1)"
-          #    echo "the value of pipver is $pipver1"
   
 	     if (( $pipver1 < 21 || $pipret != 0 )) 
              then
@@ -337,14 +339,14 @@ pythoninstalls() {
 	        pip21
                 pyupgrade https://www.python.org/ftp/python/ "3.6.12" "Python-3.6.12.tgz" 
                 lbrelease
-	        pip21 3
 		pyvercheck python
+	        pip21 3
 		pip21 ${piver112}
         fi 
 	pyvercheck python
 	if [[ ( $piver1 <  $cmd1 ) ]]
 	then
-		echo "Upgrading Python to versio $cmd1"	
+		echo "Upgrading Python to version $cmd1"	
                 pyupgrade https://www.python.org/ftp/python/ $cmd1 $cmd2
 	        lbrelease
 		pyvercheck python
@@ -353,18 +355,13 @@ pythoninstalls() {
 }
 
 pythoncurrent() {
-        pyv=`which python`
-	pyvs="$?"
-	if [[ ( $pyvs -ne 0 ) ]]
-	then
+     pyv=`which python`
+     pyvs="$?"
+     if [[ ( $pyvs -ne 0 ) ]]
+     then
             echo "No Python Found; GREENFIELD Installs proceeding"
-	fi 
+     else	 
 	pyvercheck python
-        if [[ ( $piver1 > $cmd1 ) ]]
-	then
-		echo "True"
-	fi
-
 	if [[ ( $piver1 = $cmd1 ) ]]
 	then
 		echo "Requirement satisfied Python is already in version \"${piver1}\" "
@@ -378,6 +375,7 @@ pythoncurrent() {
 		echo "The current version of Python ${piver1} is Higher than the request $cmd1 ;exiting"
 		exit
 	fi
+     fi	
 }
 
 sethelp() {
@@ -386,6 +384,9 @@ sethelp() {
 	echo "       Second-argument is the Python version 3.8.x "
         echo "       Third-argument is the Python tar file name Python-3.8.x.tgz (check website for specific https://www.python.org/ftp/python/) "
         echo "       If \"NO\" second and third argument given then defaults to version set in the script"
+	echo "        *******     "
+	echo "Display Help: ./py.sh -h    " 
+        echo " "
 }
 
 # Function declaration ends
@@ -402,8 +403,8 @@ done
 if [[ ( "$#" -eq 0 ) ]]
 then
 	#set -- "3.10.0" "Python-3.10.0a6.tgz"
-	#set -- "3.9.4" "Python-3.9.4.tgz"
-	set -- "3.8.7" "Python-3.8.7.tgz"
+	set -- "3.9.4" "Python-3.9.4.tgz"
+	#set -- "3.8.7" "Python-3.8.7.tgz"
 	#set -- "3.7.9" "Python-3.7.9.tgz"
 	#set -- "3.6.12" "Python-3.6.12.tgz" 
 
@@ -435,7 +436,6 @@ then
 	mi2="${mi,,}"
 	ji=$(cat /etc/*-release | grep DISTRIB_ID | awk '{split($0,a,"=");print a[2]}')
 	ki="${ji,,}"
-	pyvercheck python
 	pythoncurrent
 	if [ "$ki" = "ubuntu" ]
 	then
