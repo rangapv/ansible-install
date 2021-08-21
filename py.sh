@@ -55,7 +55,7 @@ pipupgrade () {
 	 sudo pip3 install --upgrade pip
 	 piprelease 3
 	 pipup 3
-      elif [[ ( $pargs = ${piver112} ) ]]
+      elif (( $(echo $pargs ${piver112} | awk '{if ($1 = $2) print 1;}') )); 
       then
 	      piprelease ${piver112}
 	      pipup ${piver112}
