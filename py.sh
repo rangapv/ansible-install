@@ -89,7 +89,11 @@ sudo sed -i "1s|^.*|${line1}|" $file1
 sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/site-packages/lsb_release.py
 }
 
+packages() {
 
+sudo $cm1 install -y libncurses-dev libgdbm-dev libz-dev tk-dev libsqlite3-dev libreadline-dev liblzma-dev libffi-dev libssl-dev
+
+}
 
 lsbrelease() {
 ryumck=0
@@ -450,6 +454,7 @@ then
 	sudo $cm1 -y upgrade
 	zlibadd
 	sslupdate $cm1 
+        packages $cm1
 	pythoninstalls
 	count=1
 	fi
@@ -474,6 +479,7 @@ then
 	sudo $cm1 -y install gcc make wget libffi-dev 
 	zlibadd
 	sslupdate $cm1 
+	packages $cm1
 	pyupgrade https://www.python.org/ftp/python/ $1 $2 
 	lbrelease
 	count=1
@@ -490,6 +496,7 @@ then
         echo " it is fedora"
         cm1="dnf"
         sudo $cm1 -y install gcc make openssl-devel bzip2-devel libffi-devel zlib-devel wget
+	packages $cm1
 	count=1
         fi
 elif [ ! -z "$s1" ]
@@ -500,6 +507,7 @@ then
         then
         echo " it is SUSE"
         sudo zypper install -y gcc make openssl-devel libffi-devel zlib-devel wget lsb-release
+	packages $cm1
 	count=1
         fi
 elif [ ! -z "$fc1" ]
