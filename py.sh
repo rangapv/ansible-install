@@ -415,7 +415,18 @@ then
 fi
    cmd1=$1
    cmd2=$2
+   piver1=0
    pyvercheck python
+
+   if [[ (( $piver1 > $cmd1 )) ]]
+   then
+     echo "Current version is higher than the requested...hence aborting"
+     exit
+   elif [[ (( $piver1 = $cmd1 )) ]]
+   then
+     echo "Current version is same as the requested...hence aborting"
+   exit
+   fi
 
 if [ $(echo "$li" | grep Linux) ]
 then
