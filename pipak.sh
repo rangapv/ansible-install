@@ -2,7 +2,7 @@
 set -E
 pip_packages() {
 
-   pip install pandas bs4 lxml 
+   pip install requests pandas bs4 lxml 
 
 }
 
