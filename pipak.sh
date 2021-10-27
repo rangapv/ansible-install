@@ -11,9 +11,10 @@ pip_packages() {
    python -m spacy download en_core_web_sm
 
    #Install nltk
-  # pip install nltk
-  # python -m nltk.downloader stopwords
-  # python -m nltk.downloader punkt
+   pip install nltk
+   python -m nltk.downloader stopwords
+   python -m nltk.downloader punkt
+   python -m nltk.downloader wordnet 
 
 }
 
