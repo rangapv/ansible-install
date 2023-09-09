@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -E
 
 pyvercheck() {
@@ -42,3 +42,4 @@ pythoncurrent() {
         fi
      fi
 }
+

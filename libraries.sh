@@ -1,15 +1,16 @@
 #!/bin/bash
 set -E
 
-
 sslupdate() {
+
 cm1="$@"
-sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-curl https://www.openssl.org/source/openssl-1.0.2o.tar.gz | tar xz
-cd openssl-1.0.2o
+sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev bzip2* libc6-dev libbz2-dev
+curl https://www.openssl.org/source/openssl-3.0.10.tar.gz | tar xz
+cd openssl-3.0.10 
 sudo ./config shared --prefix=/usr/local
 sudo make
 sudo make install
+
 }
 
 susepyup(){
@@ -19,13 +20,31 @@ sudo zypper -y install git
 
 
 zlibadd() {
-        sudo wget http://www.zlib.net/zlib-1.2.11.tar.gz
-        tar -xzf ./zlib-1.2.11.tar.gz
-        cd zlib-1.2.11
+
+	zlib="zlib-1.3"
+	sudo wget http://www.zlib.net/$zlib.tar.gz 
+        tar -xzf ./$zlib.tar.gz
+        cd $zlib 
         sudo make distclean
         sudo ./configure
         sudo make
         sudo make install
+        ld1=`cat $HOME/.bashrc | grep "export LDFLAGS="`
+        if [[ ( ! -z "$ld1" ) ]]
+	then
+	echo "export LDFLAGS=${LDFLAGS} -L/usr/local/lib" >> ~/.bashrc  
+        fi
+       	ld2=`cat $HOME/.bashrc | grep "export CPPFLAGS="`
+	if [[ ( ! -z "$ld2" ) ]]
+	then
+	echo "export CPPFLAGS=${CPPFLAGS} -I/usr/local/include" >> ~/.bashrc
+    	fi
+    	ld3=`cat $HOME/.bashrc | grep "export PKG_CONFIG_PATH="`
+        if [[ ( ! -z "$ld3" ) ]]
+	then
+	echo "export PKG_CONFIG_PATH=${PKG_CONFIG_PATH} /usr/local/lib/pkgconfig" >> ~/.bashrc
+	fi
+
 }
 
 
