@@ -31,62 +31,6 @@ wchpyth=`which python`
 `sudo ln -sf /usr/bin/python3 ${wchpyth}`
 }
 
-pipupgrade () {
-      pipargs="$#"
-      pargs=("$@")
-      pargs1=${pargs[$((pipargs-pipargs))]}
-      pyvercheck python
-
-      if [[ ( $pargs -eq 0 ) ]]
-      then
-	 sudo $pargs1 install -y python-pip
-         sudo pip install --upgrade pip
-	 piprelease
-	 pipup
-      elif [[ ( $pargs = 3 ) ]]
-      then
-         sudo $pargs1 install -y python3-pip
-	 sudo pip3 install --upgrade pip
-	 piprelease 3
-	 pipup 3
-      elif (( $(echo $pargs ${piver112} | awk '{if ($1 = $2) print 1;}') )); 
-      then
-	      piprelease ${piver112}
-	      pipup ${piver112}
-      else
-	 echo "This should not happen"
-      fi
-}
-
-
-pip21() {
-        pip21arg1="$#"
-	pip21arg2="$@"
-	
- 	pipupgrade $pip21arg2
-             declare -i pipver1
-             pyvercheck python              
-             pipadd="pip3.${piver33}"
-	     pipv=$( echo "$pipadd --version")
-             pipret=$( echo "$?" )
-	     pipver1=100
-	     if [[ $pipret < 1 ]]
-             then
-	     pipver=$( echo "$pipv" | awk '{split($0,a," ");print a[2]}')
-             pipver1=$( echo "$pipver" | awk '{split($0,a,".");print a[1]}')
-             fi 
-  
-	     if (( $pipver1 < 21 || $pipret != 0 )) 
-             then
-                eval "sudo $cm1 install -y wget"
-                eval "wget https://bootstrap.pypa.io/get-pip.py -O ./get-pip.py"
-                eval "sudo python3 ./get-pip.py"
-             else
-              echo "pipver is >21"
-             fi
-}
-
-
 #
 
 pythoninstalls() {
@@ -143,12 +87,20 @@ then
 	#set -- "3.8.7" "Python-3.8.7.tgz"
 	#set -- "3.7.9" "Python-3.7.9.tgz"
 	#set -- "3.6.12" "Python-3.6.12.tgz" 
-
+        echo "No version info requested by user hence defaulting to 3.9.4"
 fi
    cmd1=$1
    cmd2=$2
    piver1=0
-   pyvercheck python
+   pyverwh=`which python`
+   if [[ ( -z "$pyverwh" ) ]]
+   then
+	   pycmdver="python3"
+   else
+	   pycmdver="python"
+   fi
+   pyvercheck $pycmdver
+
 
    if [[ (( $piver1 > $cmd1 )) ]]
    then
@@ -202,6 +154,11 @@ then
 	sudo $cm1 -y update
 	zlibadd
 	sslupdate $cm1 
+        packages $cm1
+	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
+        lbrelease
+        pip21
+        pipup
 	fi
 	fi
 	count=1
@@ -228,7 +185,7 @@ then
 	zlibadd
 	sslupdate $cm1 
 	packages $cm1
-	pyupgrade https://www.python.org/ftp/python/ $1 $2 
+	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
 	lbrelease
 	count=1
 	pip21
@@ -313,7 +270,7 @@ then
         then
           sudo ln -sf $link /usr/bin/python 
         fi
-        pyupgrade https://www.python.org/ftp/python/ $1 $2 
+	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
         count=1
 	pip21
         pipup

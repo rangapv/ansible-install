@@ -1,19 +1,76 @@
 #!/bin/bash
 set -E
 
-pipup() {
+pipupgrade() {
+      pipargs="$#"
+      pargs=("$@")
+      pargs1=${pargs[$((pipargs-pipargs))]}
+      pyvercheck python
 
+      if [[ ( $pargs -eq 0 ) ]]
+      then
+         sudo $pargs1 install -y python-pip
+         sudo pip install --upgrade pip
+         piprelease
+         pipup
+      elif [[ ( $pargs = 3 ) ]]
+      then
+         sudo $pargs1 install -y python3-pip
+         sudo pip3 install --upgrade pip
+         piprelease 3
+         pipup 3
+      elif (( $(echo $pargs ${piver112} | awk '{if ($1 = $2) print 1;}') ));
+      then
+              piprelease ${piver112}
+              pipup ${piver112}
+      else
+         echo "This should not happen"
+      fi
+}
+
+
+pip21() {
+        pip21arg1="$#"
+        pip21arg2="$@"
+
+        pipupgrade $pip21arg2
+             declare -i pipver1
+             pyvercheck python
+             pipadd="pip3.${piver33}"
+             pipv=$( echo "$pipadd --version")
+             pipret=$( echo "$?" )
+             pipver1=100
+             if [[ $pipret < 1 ]]
+             then
+             pipver=$( echo "$pipv" | awk '{split($0,a," ");print a[2]}')
+             pipver1=$( echo "$pipver" | awk '{split($0,a,".");print a[1]}')
+             fi
+
+             if (( $pipver1 < 21 || $pipret != 0 ))
+             then
+                eval "sudo $cm1 install -y wget"
+                eval "wget https://bootstrap.pypa.io/get-pip.py -O ./get-pip.py"
+                eval "sudo python3 ./get-pip.py"
+             else
+              echo "pipver is >21"
+             fi
+}
+
+
+pipup() {
           pipuparg1="$#"
           pipuparg2="$@"
           pipflag=0
           piver=$(python -V 2>&1)
               piverec=$(echo "$?")
-              piver34=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
-              piverwh=$(which python)
+             # piver34=$( echo "${piver}" | awk '{split($0,a,".");print a[2]}')
+              piver34=$(echo "${piver}" | awk '{split($0,a," "); print a[2]}')
+	      piverwh=$(which python)
               piverwhec=$(echo "$?")
               if [[ ( $pipuparg2 -eq 0 ) ]]
               then
-                     pyvercheck python
+                      chkpython
+ 		      pyvercheck python
                      pipflag=1
               else
                       pyvercheck python${pipuparg2}
@@ -46,10 +103,12 @@ pipup() {
               then
                    piprelease
               fi
-              nw="pip3"
-              ne="."
-              newpip="${nw}${ne}${piver33}"
+              piprelease 3
+	      nw="pip"
+              newpip="${nw}${piver35}"
+              piprelease ${piver35}
               echo `${newpip} -V`
+
 }
 
 

@@ -4,9 +4,10 @@ set -E
 sslupdate() {
 
 cm1="$@"
+sslver1="3.0.10"
 sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev bzip2* libc6-dev libbz2-dev
-curl https://www.openssl.org/source/openssl-3.0.10.tar.gz | tar xz
-cd openssl-3.0.10 
+curl https://www.openssl.org/source/openssl-$sslver1.tar.gz | tar xz
+cd openssl-$sslver1 
 sudo ./config shared --prefix=/usr/local
 sudo make
 sudo make install
@@ -48,9 +49,31 @@ zlibadd() {
 }
 
 
+
+chkpython() {
+
+chkp1=`which python`
+chkp1s="$?"
+
+if [[ ( $chkp1s = "0" ) ]]
+then
+   chkp="python"
+fi
+
+chkp2=`which python3`
+chkp2s="$?"
+
+if [[ ( $chkp2s = "0" ) ]]
+then
+   chkp="python3"
+fi
+
+}
+
 lbrelease() {
 file1="/usr/bin/lsb_release"
-pyvercheck python
+chkpython
+pyvercheck $chkp 
 
 line1="#!${wchpy}"
 sudo sed -i "1s|^.*|${line1}|" $file1
@@ -68,7 +91,9 @@ lsbrelease() {
 ryumck=0
 if [[ ( ! -z $c1 ) || ( ! -z $r1 ) || ( ! -z $a1 ) ]]
 then
-ryum=`which python`
+	
+chkpython	
+ryum=`which $chkp`
 ryums="$?"
 if [[ ( $ryums -eq 0 ) ]]
 then
