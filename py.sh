@@ -15,13 +15,13 @@ pyver2=${args[$((pargs-$((pargs-1))))]}
 pyver3=${args[$((pargs-$((pargs-2))))]}
 var3="/"
 wg=$pyver$pyver2$var3$pyver3
-sudo wget "$wg" 
-tar xzf $pyver3
+sudo wget $wg
+tar xf "$pyver3"
 se1=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]"."a[3]}')
 se2=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]}')
 se3=$( echo "${pyver2}" | awk '{split($0,a,".");print a[1]"."a[2]}')
-cd $se1 
-sudo ./configure --enable-optimizations
+cd $se1
+sudo ./configure
 sudo make altinstall
 slpy="python${se3}"
 pyuni="${slpy}"
@@ -29,13 +29,12 @@ wchpyuni=`which ${slpy}`
 wchpyth=`which python`
 if [[ ( -z "$wchpyth" ) ]]
 then
-	wchpyth="/usr/bin/python"
+        wchpyth="/usr/bin/python"
 fi
 `sudo ln -sf "${wchpyuni}" /usr/bin/python3`
 `sudo ln -sf /usr/bin/python3 ${wchpyth}`
 }
 
-#
 
 pythoninstalls() {
 
@@ -101,12 +100,8 @@ count=0
 
 if [ ! -z "$u1" ]
 then 
-
-	pc2=`which python`
-	pc2s="$?"
-	echo "python release is $pc2 and status is $pc2s"
-	if [ "$pc2s" -ne 0 ]
-	then
+        pythonwc
+	#echo "python release is $pc2 and status is $pc2s"
 	mi=$(lsb_release -cs)
 	lsb=$(echo "$?")
 	if [[ ( $lsb > 0 ) ]]
@@ -123,18 +118,17 @@ then
    	cm1="apt-get"
         cm11="add-apt-repository"
    	cm2="apt-key"
-        sudo $cm11 -y ppa:deadsnakes/ppa
+        #sudo $cm11 -y ppa:deadsnakes/ppa
         sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
-	zlibadd
+	#zlibadd
 	sslupdate $cm1 
         packages $cm1
-	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
-        lbrelease
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
+	lbrelease
         pip21
         pipup
-	fi
 	fi
 	count=1
 
@@ -160,7 +154,7 @@ then
 	zlibadd
 	sslupdate $cm1 
 	packages $cm1
-	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
 	lbrelease
 	count=1
 	pip21
@@ -245,7 +239,7 @@ then
         then
           sudo ln -sf $link /usr/bin/python 
         fi
-	pyupgrade https://www.python.org/ftp/python/ $cmd1 $smd2
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
         count=1
 	pip21
         pipup

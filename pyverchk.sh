@@ -25,6 +25,32 @@ fi
 }
 
 
+pythonwc() {
+
+   pyverwh=`which python`
+   if [[ ( ! -z "$pyverwh" ) ]]
+   then
+           pycmdver="python"
+           pyvercheck $pycmdver
+   fi
+
+   pyverwh3=`which python3`
+   if [[ ( ! -z "$pyverwh3" ) ]]
+   then
+           pycmdver="python3"
+           pyvercheck $pycmdver
+   fi
+
+   if [[ ( -z "$pyverwh" ) && ( -z "$pyverwh3" ) ]]
+   then
+           echo "No python installation found in this system"
+           piver1="0"
+   fi
+
+}
+
+
+
 pythoncurrent() {
      pyv=`which python`
      pyvs="$?"
@@ -59,20 +85,21 @@ pythoninstalv() {
         
  		read -r inputpyver
          	testinput=`echo "$inputpyver" | grep "^[(0-9)].[(0-9)]"`
-         	if [[ ( ! -z "$testinput" ) ]]
+                #echo "input testinput is $testinput" 
+		if [[ ( ! -z "$testinput" ) ]]
 	 	then
 			break
 		fi
 		 }
 		done
 
-	 if [ ! -z "$inputpyver" ]
-	 then
+		if [[ ( ! -z "$inputpyver" )  ]]
+	 	then
 		 #echo "piver33 is $piver33"
 		 piver33="$inputpyver"
-	 else
+	 	else
 		 piver33="3.8.7"
-	 fi
+	 	fi
 
         case ${inputpyver} in
 		3.8.7)
@@ -106,36 +133,20 @@ pythoninstalv() {
 	esac
    cmd1="$inputpyver"
    piver1=0
-   pyverwh=`which python`
-   if [[ ( ! -z "$pyverwh" ) ]]
-   then
-           pycmdver="python"
-           pyvercheck $pycmdver
-   fi
 
-   pyverwh3=`which python3`
-   if [[ ( ! -z "$pyverwh3" ) ]]
-   then
-   else
-           pycmdver="python3"
-           pyvercheck $pycmdver
-   fi
-
-   if [[ ( -z "$pyverwh" ) && ( -z "$pyverwh3" ) ]]
-   then
-	   echo "No python installation found in this system"
-           piver1="0"
-   fi
-
-
-   if [[ (( $piver1 > $cmd1 )) ]]
-   then
+   pythonwc
+    #echo "pycmdver is $pycmdver and piver1 is $piver1 and cmd1 is $cmd1"
+    cl1=$(echo "$piver1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
+    cl2=$(echo "$cmd1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
+    echo "cl1 is $cl1 and cl2 is $cl2"
+    if ( (( $(echo "$cl1 > $cl2" | bc -l ) )) ) 
+    then
      echo "Current version is higher than the requested...hence aborting"
      exit
-   elif [[ (( $piver1 = $cmd1 )) ]]
-   then
+    elif ( (( $(echo "$cl1 = $cl2" | bc -l ) )) )
+    then
      echo "Current version is same as the requested...hence aborting"
-   exit
-   fi
+     exit
+    fi
 
 }
