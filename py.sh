@@ -27,6 +27,10 @@ slpy="python${se3}"
 pyuni="${slpy}"
 wchpyuni=`which ${slpy}`
 wchpyth=`which python`
+if [[ ( -z "$wchpyth" ) ]]
+then
+	wchpyth="/usr/bin/python"
+fi
 `sudo ln -sf "${wchpyuni}" /usr/bin/python3`
 `sudo ln -sf /usr/bin/python3 ${wchpyth}`
 }
@@ -59,10 +63,9 @@ pythoninstalls() {
 }
 
 sethelp() {
-	echo "Usage: ./py.sh 3.8.0 Python-3.8.0.tgz "
+	echo "Usage: ./py.sh 3.8.0 "
 	echo "       First-argument is this script executable"
 	echo "       Second-argument is the Python version 3.8.x "
-        echo "       Third-argument is the Python tar file name Python-3.8.x.tgz (check website for specific https://www.python.org/ftp/python/) "
         echo "       If \"NO\" second and third argument given then defaults to version set in the script"
 	echo "        *******     "
 	echo "Display Help: ./py.sh -h    " 
@@ -80,37 +83,9 @@ while getopts ":h" option; do
    esac
 done
 
-if [[ ( "$#" -eq 0 ) ]]
-then
-	#set -- "3.10.0" "Python-3.10.0a6.tgz"
-	set -- "3.9.4" "Python-3.9.4.tgz"
-	#set -- "3.8.7" "Python-3.8.7.tgz"
-	#set -- "3.7.9" "Python-3.7.9.tgz"
-	#set -- "3.6.12" "Python-3.6.12.tgz" 
-        echo "No version info requested by user hence defaulting to 3.9.4"
-fi
-   cmd1=$1
-   cmd2=$2
-   piver1=0
-   pyverwh=`which python`
-   if [[ ( -z "$pyverwh" ) ]]
-   then
-	   pycmdver="python3"
-   else
-	   pycmdver="python"
-   fi
-   pyvercheck $pycmdver
 
+pythoninstalv
 
-   if [[ (( $piver1 > $cmd1 )) ]]
-   then
-     echo "Current version is higher than the requested...hence aborting"
-     exit
-   elif [[ (( $piver1 = $cmd1 )) ]]
-   then
-     echo "Current version is same as the requested...hence aborting"
-   exit
-   fi
 
 if [ $(echo "$li" | grep Linux) ]
 then
