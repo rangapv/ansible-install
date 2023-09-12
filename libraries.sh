@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -E
 
 sslupdate() {
 
 cm1="$@"
 sslver1="3.0.10"
-sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev bzip2* libc6-dev libbz2-dev
 curl https://www.openssl.org/source/openssl-$sslver1.tar.gz | tar xz
 cd openssl-$sslver1 
 sudo ./config shared --prefix=/usr/local
@@ -83,7 +82,8 @@ sudo ln -s /usr/share/pyshared/lsb_release.py /usr/local/lib/python${pyvert}/sit
 
 packages() {
 
-sudo $cm1 install -y libncurses-dev libgdbm-dev libz-dev tk-dev libsqlite3-dev libreadline-dev liblzma-dev libffi-dev libssl-dev
+sudo $cm1 -y install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libsqlite3-dev tk-dev libgdbm-dev bzip2* libc6-dev libbz2-dev
+sudo $cm1 -y install libncurses-dev libgdbm-dev libz-dev tk-dev libsqlite3-dev libreadline-dev liblzma-dev libffi-dev libssl-dev
 
 }
 
@@ -143,5 +143,4 @@ sudo sed -i "1s|^.*|${yum1}|" $filey
 filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
 }
-
 

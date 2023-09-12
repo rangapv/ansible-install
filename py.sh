@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
@@ -14,7 +14,9 @@ pyver=${args[$((pargs-pargs))]}
 pyver2=${args[$((pargs-$((pargs-1))))]}
 pyver3=${args[$((pargs-$((pargs-2))))]}
 var3="/"
+#echo "pargs is $pargs pyver is $pyver pyver2 is $pyver2 and pyver3 is $pyver3"
 wg=$pyver$pyver2$var3$pyver3
+#echo "wg is $wg"
 sudo wget $wg
 tar xf "$pyver3"
 se1=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]"."a[3]}')
@@ -31,8 +33,9 @@ if [[ ( -z "$wchpyth" ) ]]
 then
         wchpyth="/usr/bin/python"
 fi
-`sudo ln -sf "${wchpyuni}" /usr/bin/python3`
-`sudo ln -sf /usr/bin/python3 ${wchpyth}`
+#echo "slpy is $slpy wchpyth is $wchpyth and wchpyuni is $wchpyuni"
+sudo ln -sf "${wchpyuni}" /usr/bin/python3
+sudo ln -sf /usr/bin/python3 ${wchpyth}
 }
 
 
@@ -85,7 +88,6 @@ done
 
 pythoninstalv
 
-
 if [ $(echo "$li" | grep Linux) ]
 then
   mac=""
@@ -119,15 +121,15 @@ then
         cm11="add-apt-repository"
    	cm2="apt-key"
         #sudo $cm11 -y ppa:deadsnakes/ppa
-        sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
+        #sudo ln -sf /usr/lib/python3/dist-packages/apt_pkg.cpython-38-x86_64-linux-gnu.so /usr/lib/python3/dist-packages/apt_pkg.so
         sudo $cm1 -y install gcc make wget
 	sudo $cm1 -y update
-	#zlibadd
-	sslupdate $cm1 
-        packages $cm1
-	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
+        packages 
+	zlibadd
+	sslupdate 
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$cmd2"
 	lbrelease
-        pip21
+	pip21
         pipup
 	fi
 	count=1
@@ -154,7 +156,7 @@ then
 	zlibadd
 	sslupdate $cm1 
 	packages $cm1
-	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$cmd2"
 	lbrelease
 	count=1
 	pip21
@@ -239,7 +241,7 @@ then
         then
           sudo ln -sf $link /usr/bin/python 
         fi
-	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$smd2"
+	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$cmd2"
         count=1
 	pip21
         pipup

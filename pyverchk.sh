@@ -76,16 +76,17 @@ pythoncurrent() {
 }
 
 
+
 pythoninstalv() {
 
 		 while (true)
 		 do
 		{
 		 echo "Pls input the version to upgrade to (available verison are 3.8.7/3.9.4/3.10.9/3.10.12/3.11.4/3.11.5/3.12.0)"
-        
+
  		read -r inputpyver
          	testinput=`echo "$inputpyver" | grep "^[(0-9)].[(0-9)]"`
-                #echo "input testinput is $testinput" 
+                #echo "input testinput is $testinput"
 		if [[ ( ! -z "$testinput" ) ]]
 	 	then
 			break
@@ -119,7 +120,7 @@ pythoninstalv() {
 		;;
 		3.11.5)
                       cmd2="Python-3.11.5.tgz"
-                ;;		
+                ;;
 		3.12.0)
                       cmd2="Python-3.12.0a1.tgz"
 		;;
@@ -127,7 +128,7 @@ pythoninstalv() {
 			 echo "Upgrading Python Version 2"
                          cmd2="Python-3.6.12.tgz"
                 ;;
-           	*) 
+           	*)
 		        echo "Verison mismatch..."
 			echo "Doing Nothing"
 	esac
@@ -139,7 +140,7 @@ pythoninstalv() {
     cl1=$(echo "$piver1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
     cl2=$(echo "$cmd1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
     echo "cl1 is $cl1 and cl2 is $cl2"
-    if ( (( $(echo "$cl1 > $cl2" | bc -l ) )) ) 
+    if ( (( $(echo "$cl1 > $cl2" | bc -l ) )) )
     then
      echo "Current version is higher than the requested...hence aborting"
      exit
