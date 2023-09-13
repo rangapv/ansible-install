@@ -15,6 +15,7 @@ pipck3s="$?"
 
 
 updatepip() {
+pythonwc
 pipchk
 if [[ ( -z "$pipck1") && ( -z "$pipck2") && ( -z "$pipck3") ]]
 then
