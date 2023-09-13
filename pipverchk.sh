@@ -21,6 +21,13 @@ then
         if [[ ( ! -z "$pycmdver" ) ]]
 	then
 	newpipinst=`$pycmdver -m pip install --upgrade pip`
+        newpips="$?"
+		if [[ ( "$newpips" != 0 ) ]]
+		then
+			`sudo "$cm1" install -y wget`
+               		`wget https://bootstrap.pypa.io/get-pip.py -O ./get-pip.py`
+                	`sudo "$pycmdver" ./get-pip.py`
+		fi
 	fi
 fi
 pipchk
@@ -34,6 +41,5 @@ pipchk
 	then
          `sudo ln -sf "$pipck3" "/usr/bin/pip${piver12}"`
 	fi
-
 }
 
