@@ -3,6 +3,7 @@
 set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) >/dev/null 2>&1
 source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/pyverchk.sh) >/dev/null 2>&1
+source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/pipverchk.sh) >/dev/null 2>&1
 source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/libraries.sh) >/dev/null 2>&1
 source <(curl -s https://raw.githubusercontent.com/rangapv/ansible-install/main/pipst.sh) >/dev/null 2>&1
 
@@ -129,8 +130,9 @@ then
 	sslupdate 
 	pyupgrade https://www.python.org/ftp/python/ "$cmd1" "$cmd2"
 	lbrelease
-	pip21
-        pipup
+	updatepip
+	#pip21
+        #pipup
 	fi
 	count=1
 
