@@ -24,7 +24,7 @@ se1=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]"."a[3]}')
 se2=$( echo "${pyver3}" | awk '{split($0,a,".");print a[1]"."a[2]}')
 se3=$( echo "${pyver2}" | awk '{split($0,a,".");print a[1]"."a[2]}')
 cd $se1
-sudo ./configure
+sudo ./configure --prefix=/usr
 sudo make altinstall
 slpy="python${se3}"
 pyuni="${slpy}"

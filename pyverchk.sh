@@ -82,7 +82,17 @@ pythoninstalv() {
 		 while (true)
 		 do
 		{
-		 echo "Pls input the version to upgrade to (available verison are 3.8.7/3.9.4/3.10.9/3.10.12/3.11.4/3.11.5/3.12.0)"
+
+		pythonwc
+
+		if [[ ( $piver1 = "0" ) ]]
+		then
+			echo "No active python installation found on this system"
+		else
+			echo "Current installation of python is $piver1"
+		fi
+
+           	echo "Pls input the version to upgrade to (available verison are 3.8.7/3.9.4/3.10.9/3.10.12/3.11.4/3.11.5/3.12.0)"
 
  		read -r inputpyver
          	testinput=`echo "$inputpyver" | grep "^[(0-9)].[(0-9)]"`
@@ -129,25 +139,29 @@ pythoninstalv() {
                          cmd2="Python-3.6.12.tgz"
                 ;;
            	*)
-		        echo "Verison mismatch..."
+		        echo "Version mismatch..."
 			echo "Doing Nothing"
+			exit
 	esac
    cmd1="$inputpyver"
    piver1=0
 
    pythonwc
     #echo "pycmdver is $pycmdver and piver1 is $piver1 and cmd1 is $cmd1"
-    cl1=$(echo "$piver1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
-    cl2=$(echo "$cmd1" | awk '{split($0,a,"."); print a[1]"."a[2]}')
-    echo "cl1 is $cl1 and cl2 is $cl2"
-    if ( (( $(echo "$cl1 > $cl2" | bc -l ) )) )
+    cl1=($(echo "$piver1" | awk '{l=split($0,a,"."); for (j=0;j<=l;j++) print a[j]}'))
+    cl2=($(echo "$cmd1" | awk '{l=split($0,a,"."); for (j=0;j<=l;j++) print a[j]}')) 
+    if [[ ( "${#cl1[@]}" > "${#cl2[@]}" ) ]]
     then
-     echo "Current version is higher than the requested...hence aborting"
-     exit
-    elif ( (( $(echo "$cl1 = $cl2" | bc -l ) )) )
-    then
-     echo "Current version is same as the requested...hence aborting"
-     exit
+    len1="${#cl2[@]}"
+    else
+    len1="${#cl1[@]}"
     fi
-
+    for (( k=0; k<$len1; k++ ))
+    do
+	    if ( (( "${cl1[$k]}" >= "${cl2[$k]}" )) )
+	    then
+     		echo "Current version is either higher/equal to the requested...hence aborting"
+     		exit
+	    fi
+    done
 }
