@@ -28,6 +28,7 @@ fi
 pythonwc() {
 
    pyverwh=`which python`
+   pyvs="$?"
    if [[ ( ! -z "$pyverwh" ) ]]
    then
            pycmdver="python"
@@ -50,7 +51,7 @@ pythonwc() {
 }
 
 
-
+cmd1=""
 pythoncurrent() {
      pyv=`which python`
      pyvs="$?"
