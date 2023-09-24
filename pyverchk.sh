@@ -157,13 +157,23 @@ pythoninstalv() {
     else
     len1="${#cl1[@]}"
     fi
+
+    if [[ ( "$cmd1" = "$piver1" ) ]]
+    then
+	    echo "The requested version is the same as isntalled version ...hence aborting"
+         	exit
+    fi
     for (( k=0; k<$len1; k++ ))
     do
-	    if ( (( "${cl1[$k]}" >= "${cl2[$k]}" )) )
+	    if ( (( "${cl1[$k]}" > "${cl2[$k]}" )) )
 	    then
      		echo "Current version is either higher/equal to the requested...hence aborting"
      		exit
+	    elif ( (( "${cl1[$k]}" < "${cl2[$k]}" )) )
+	    then 
+	        break 	
 	    fi
+
     done
     echo "Proceeding with the Install"
 }
