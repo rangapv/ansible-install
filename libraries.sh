@@ -21,7 +21,7 @@ sudo zypper -y install git
 
 zlibadd() {
 
-	zlib="zlib-1.3"
+	zlib="zlib-1.3.1"
 	sudo wget http://www.zlib.net/$zlib.tar.gz 
         tar -xzf ./$zlib.tar.gz
         cd $zlib 
@@ -144,3 +144,4 @@ filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
 }
 
+zlibadd
