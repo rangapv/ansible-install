@@ -20,8 +20,12 @@ sudo zypper -y install git
 
 
 zlibadd() {
-
-	zlib="zlib-1.3.1"
+        zarg="$@"
+        if [[ ( "$#" -eq 0 ) ]]	
+        then
+	  zarg="1.3.1"
+	fi
+	zlib="zlib-${zarg}"
 	sudo wget http://www.zlib.net/$zlib.tar.gz 
         tar -xzf ./$zlib.tar.gz
         cd $zlib 
@@ -44,7 +48,6 @@ zlibadd() {
 	then
 	echo "export PKG_CONFIG_PATH=${PKG_CONFIG_PATH} /usr/local/lib/pkgconfig" >> ~/.bashrc
 	fi
-
 }
 
 
