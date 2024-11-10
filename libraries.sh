@@ -147,4 +147,3 @@ filez="/bin/yum"
 sudo sed -i "1s|^.*|${yum1}|" $filez
 }
 
-zlibadd
