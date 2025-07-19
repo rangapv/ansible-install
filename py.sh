@@ -87,8 +87,8 @@ while getopts ":h" option; do
 done
 
 
-pythoninstalv
-
+#pythoninstalv
+pythoninstalls
 if [ $(echo "$li" | grep Linux) ]
 then
   mac=""
