@@ -1,12 +1,14 @@
-#!/usr/bin/env bash
+#/usr/bin/env bash
 set -E
 
 sslupdate() {
 
 cm1="$@"
-sslver1="3.0.10"
+sslver1="3.4.2"
 curl https://www.openssl.org/source/openssl-$sslver1.tar.gz | tar xz
-cd openssl-$sslver1 
+sudo wget https://github.com/openssl/openssl/releases/download/openssl-${sslver1}/openssl-${sslver1}.tar.gz
+tar -xzf ./openssl-${sslver1}.tar.gz
+cd ./openssl-${sslver1}
 sudo ./config shared --prefix=/usr/local
 sudo make
 sudo make install
